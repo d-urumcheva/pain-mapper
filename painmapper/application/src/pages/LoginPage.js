@@ -11,7 +11,6 @@ export default class LoginPage extends Component {
                 <View >
                     <Logo />
                     <LoginForm />
-                </View>
                 <View style={styles.signupView}>
                     <Text style={styles.signupText}> 
                         Don't have an account yet?     
@@ -21,6 +20,7 @@ export default class LoginPage extends Component {
                             Sign up
                         </Text>
                     </TouchableOpacity>
+                </View>
                 </View>
             </View>
         );
