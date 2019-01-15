@@ -2,10 +2,15 @@ import React, {Component} from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { white } from 'ansi-colors';
 
-export default class LoginForm extends Component {
+export default class RegisterForm extends Component {
   render() {
       return(
       <View style={styles.container}>
+        <TextInput style={styles.inputBox}
+            placeholder='name'
+            placeholderTextColor={"white"}
+            autoCorrect={false}
+        />
         <TextInput style={styles.inputBox}
             placeholder='email'
             placeholderTextColor={"white"}
@@ -17,9 +22,15 @@ export default class LoginForm extends Component {
             autoCorrect={false}
             secureTextEntry={true}
         />
+        <TextInput style={styles.inputBox}
+            placeholder='confirm password'
+            placeholderTextColor={"white"}
+            autoCorrect={false}
+            secureTextEntry={true}
+        />
         <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}> 
-                Log In
+                Register
             </Text>
         </TouchableOpacity>
       </View>
@@ -49,8 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#1c313a',
         borderRadius: 25,
         marginVertical: 10,
-        paddingVertical: 13, 
-        marginTop: 15
+        paddingVertical: 13
       },
 
       buttonText: {

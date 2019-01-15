@@ -10,7 +10,7 @@ export default class LoginPage extends Component {
             <View style={styles.container}> 
                 <View >
                     <Logo />
-                    <LoginForm style={styles.loginForm}/>
+                    <LoginForm />
                 </View>
                 <View style={styles.signupView}>
                     <Text style={styles.signupText}> 
