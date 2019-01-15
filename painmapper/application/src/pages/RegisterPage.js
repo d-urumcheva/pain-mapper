@@ -3,22 +3,26 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import RegisterForm from '../components/RegisterForm';
 import Logo from '../components/Logo';
 
-export default class LoginPage extends Component {
+import { withNavigation } from 'react-navigation';
 
+class RegisterPage extends Component {
+   
+    static navigationOptions ={
+        headerLeft: null,
+        gesturesEnabled: false,
+    }
+    
     render() {
         return (
             <View style={styles.container}>
                 <View>
                     <Logo />
-                    <Text style={styles.textPrompt}>
-                        Create an account:
-                    </Text>
                     <RegisterForm />
                     <View style={styles.loginView}>
                         <Text style={styles.loginText}>
                             Already have an account?
                         </Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('LoginPage')}>
                             <Text style={styles.loginButton}>
                                 Sign in
                             </Text>
@@ -30,6 +34,8 @@ export default class LoginPage extends Component {
     }
 }
 
+export default withNavigation(RegisterPage);
+ 
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,

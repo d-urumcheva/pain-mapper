@@ -3,7 +3,9 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import LoginForm from '../components/LoginForm';
 import Logo from '../components/Logo';
 
-export default class LoginPage extends Component {
+import { withNavigation } from 'react-navigation';
+
+class LoginPage extends Component {
 
     render() {
         return(
@@ -15,7 +17,7 @@ export default class LoginPage extends Component {
                         <Text style={styles.signupText}> 
                             Don't have an account yet?     
                         </Text>
-                        <TouchableOpacity> 
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RegisterPage')}> 
                             <Text style={styles.signupButton}>
                                 Sign up
                             </Text>
@@ -26,6 +28,8 @@ export default class LoginPage extends Component {
         );
     }
 }
+
+export default withNavigation(LoginPage);
 
 const styles = StyleSheet.create({
     container: {

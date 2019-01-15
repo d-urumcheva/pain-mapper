@@ -1,8 +1,21 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
-import { white } from 'ansi-colors';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 
-export default class LoginForm extends Component {
+import { withNavigation } from 'react-navigation';
+
+class LoginForm extends Component {
+
+    logIn = () => {
+        Alert.alert(
+            'Logging In', 
+            'We are logging you in. Bear with us.', 
+            [
+                {text: 'OK', onPress: () => console.log('OK button pressed')}
+            ], 
+            { cancelable: false}
+        )
+    }    
+
   render() {
       return(
       <View style={styles.container}>
@@ -17,13 +30,13 @@ export default class LoginForm extends Component {
             autoCorrect={false}
             secureTextEntry={true}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={this.logIn.bind(this)}>
             <Text style={styles.buttonText}> 
                 Log In
             </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-            <Text style={styles.forgotPassButton}> 
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassPage')}>
+            <Text style={styles.forgotPassButton} > 
                 Forgot password?
             </Text>
         </TouchableOpacity>
@@ -31,6 +44,8 @@ export default class LoginForm extends Component {
       );
   }
 }
+
+export default withNavigation(LoginForm);
 
 const styles = StyleSheet.create({
     container: {

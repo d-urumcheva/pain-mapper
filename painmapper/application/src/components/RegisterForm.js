@@ -1,9 +1,21 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import { white } from 'ansi-colors';
 
 export default class RegisterForm extends Component {
-  render() {
+  
+    createAccount = () => {
+        Alert.alert(
+            'Create Account', 
+            'We are creating your account. Bear with us.', 
+            [
+                {text: 'OK', onPress: () => console.log('OK button pressed')}
+            ], 
+            { cancelable: false}
+        )
+    }
+
+    render() {
       return(
       <View style={styles.container}>
         <TextInput style={styles.inputBox}
@@ -28,7 +40,7 @@ export default class RegisterForm extends Component {
             autoCorrect={false}
             secureTextEntry={true}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={this.createAccount.bind(this)}>
             <Text style={styles.buttonText}> 
                 Register
             </Text>

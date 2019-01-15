@@ -1,9 +1,21 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import { white } from 'ansi-colors';
 
 export default class ForgotPassForm extends Component {
-  render() {
+  
+    forgotPassword = () => {
+        Alert.alert(
+            'Forgotten Password', 
+            'We have sent an email with a new password to your email address. Give it a few minutes before checking your mail.', 
+            [
+                {text: 'OK', onPress: () => console.log('OK button pressed')}
+            ], 
+            { cancelable: false}
+        )
+    }    
+
+    render() {
       return(
       <View style={styles.container}>
         <Text style={styles.textPrompt}> 
@@ -14,7 +26,7 @@ export default class ForgotPassForm extends Component {
             placeholderTextColor={"white"}
             autoCorrect={false}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={this.forgotPassword.bind(this)}>
             <Text style={styles.buttonText}> 
                 Reset password
             </Text>
