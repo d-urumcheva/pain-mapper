@@ -11,16 +11,16 @@ export default class LoginPage extends Component {
                 <View >
                     <Logo />
                     <LoginForm />
-                <View style={styles.signupView}>
-                    <Text style={styles.signupText}> 
-                        Don't have an account yet?     
-                    </Text>
-                    <TouchableOpacity> 
-                        <Text style={styles.signupButton}>
-                            Sign up
+                    <View style={styles.signupView}>
+                        <Text style={styles.signupText}> 
+                            Don't have an account yet?     
                         </Text>
-                    </TouchableOpacity>
-                </View>
+                        <TouchableOpacity> 
+                            <Text style={styles.signupButton}>
+                                Sign up
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         );
@@ -51,6 +51,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500', 
         paddingLeft: 5
-
     }
 })

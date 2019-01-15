@@ -22,6 +22,11 @@ export default class LoginForm extends Component {
                 Log In
             </Text>
         </TouchableOpacity>
+        <TouchableOpacity>
+            <Text style={styles.forgotPassButton}> 
+                Forgot password?
+            </Text>
+        </TouchableOpacity>
       </View>
       );
   }
@@ -58,5 +63,10 @@ const styles = StyleSheet.create({
         fontWeight:'500',
         color:'#ffffff',
         textAlign:'center'
-      }
+      },
+
+      forgotPassButton: {
+        color: 'rgba(255,255,255,0.6)',
+        fontSize: 14
+    }
 })
