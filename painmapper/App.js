@@ -8,6 +8,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import LoginPage from './application/src/pages/LoginPage';
 import RegisterPage from './application/src/pages/RegisterPage';
 import ForgotPassPage from './application/src/pages/ForgotPassPage';
+import HomePage from './application/src/pages/HomePage';
 
 class App extends Component {
   render() {
@@ -21,6 +22,7 @@ class App extends Component {
 
 const AppStackNavigator = createStackNavigator(
   {
+    HomePage: HomePage,
     LoginPage: LoginPage, 
     RegisterPage: RegisterPage, 
     ForgotPassPage: ForgotPassPage
