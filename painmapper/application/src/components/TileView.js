@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import Tile from './Tile';
+import IconTile from './IconTile';
 
 import { withNavigation } from 'react-navigation';
 
@@ -10,12 +10,8 @@ class TileView extends Component {
         return (
             <ScrollView style={styles.scrollContainer} >
                 <View style={styles.container}>
-                    <Tile style={styles.tile} 
+                    <IconTile style={styles.tile} 
                     name='food' />
-                    <Tile style={styles.tile} 
-                    name='sleep' />
-                    <Tile style={styles.tile} 
-                    name='pain' />
                 </View>
             </ScrollView>
         );
