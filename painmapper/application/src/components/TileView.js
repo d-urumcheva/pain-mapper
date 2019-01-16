@@ -6,15 +6,35 @@ import { withNavigation } from 'react-navigation';
 
 class TileView extends Component {
 
+    assetsList = [
+        {
+            name: 'food'
+        }, 
+        {
+            name: 'sleep'
+        },
+        {
+            name: 'pain'
+        },         
+    ];
+
     render() {
+
+        const iconTiles = this.assetsList.map(item => {
+            return (
+                    <IconTile style={styles.tile}
+                    key={item.name}
+                    name={item.name} />
+            );
+        })
+
         return (
             <ScrollView style={styles.scrollContainer} >
                 <View style={styles.container}>
-                    <IconTile style={styles.tile} 
-                    name='food' />
+                    {iconTiles}
                 </View>
             </ScrollView>
-        );
+        )
     }
 }
 
