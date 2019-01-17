@@ -9,6 +9,8 @@ import LoginPage from './application/src/pages/LoginPage';
 import RegisterPage from './application/src/pages/RegisterPage';
 import ForgotPassPage from './application/src/pages/ForgotPassPage';
 import HomePage from './application/src/pages/HomePage';
+import SettingsPage from './application/src/pages/SettingsPage';
+import PersonalDetailsPage from './application/src/pages/PersonalDetailsPage';
 
 class App extends Component {
   render() {
@@ -22,10 +24,12 @@ class App extends Component {
 
 const AppStackNavigator = createStackNavigator(
   {
+    SettingsPage: SettingsPage,
     HomePage: HomePage,
     LoginPage: LoginPage, 
     RegisterPage: RegisterPage, 
-    ForgotPassPage: ForgotPassPage
+    ForgotPassPage: ForgotPassPage,
+    PersonalDetailsPage: PersonalDetailsPage
   }, 
   {
     defaultNavigationOptions: {

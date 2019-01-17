@@ -6,9 +6,14 @@ import { withNavigation } from 'react-navigation';
 
 class HomePage extends Component {
     
+    static navigationOptions = {
+        headerLeft: null,
+        gesturesEnabled: false, 
+    }
+    
     render() {
         return (
-            <ScrollView style={styles.scrollContainer} >
+            <ScrollView style={styles.scrollContainer}>
                 <View style={styles.container}>
                    <Text> 
                        This will be a calendar-like feature
