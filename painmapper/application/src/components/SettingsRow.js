@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     rowText: {
         fontSize: 20,
         color: '#333333',
-        paddingLeft: 10
+        paddingLeft: 10, 
+        textAlignVertical: 'center'
     }
 })

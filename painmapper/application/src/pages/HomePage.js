@@ -9,7 +9,10 @@ class HomePage extends Component {
     static navigationOptions = {
         headerLeft: null,
         gesturesEnabled: false, 
-    }
+        headerStyle: {
+            backgroundColor: 'steelblue'
+        }
+    }    
     
     render() {
         return (

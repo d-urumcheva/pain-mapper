@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView, Dimensions, View } from 'react-native';
 import SettingsRow from '../components/SettingsRow';
+import ToggleSwitchRow from '../components/ToggleSwitchRow';
 
 import { withNavigation } from 'react-navigation';
 
@@ -25,8 +26,8 @@ class SettingsPage extends Component {
             <ScrollView style={styles.scrollContainer} >
                 <View style={styles.container}>
                     <SettingsRow name='Personal Details' action='reroute' nextPage='PersonalDetailsPage'/>
-                    <SettingsRow name='Assets' />
-                    <SettingsRow name='Push Notifications' />
+                    <SettingsRow name='Assets' action='reroute' nextPage='AssetsPage'/>
+                    <ToggleSwitchRow name='Notifications' />
                 </View>
                 <View style={styles.container}>
                     <SettingsRow name='Report a problem' />

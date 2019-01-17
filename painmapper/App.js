@@ -11,6 +11,7 @@ import ForgotPassPage from './application/src/pages/ForgotPassPage';
 import HomePage from './application/src/pages/HomePage';
 import SettingsPage from './application/src/pages/SettingsPage';
 import PersonalDetailsPage from './application/src/pages/PersonalDetailsPage';
+import AssetsPage from './application/src/pages/AssetsPage';
 
 class App extends Component {
   render() {
@@ -25,11 +26,13 @@ class App extends Component {
 const AppStackNavigator = createStackNavigator(
   {
     SettingsPage: SettingsPage,
+    AssetsPage: AssetsPage,
     HomePage: HomePage,
     LoginPage: LoginPage, 
     RegisterPage: RegisterPage, 
     ForgotPassPage: ForgotPassPage,
-    PersonalDetailsPage: PersonalDetailsPage
+    PersonalDetailsPage: PersonalDetailsPage,
+    
   }, 
   {
     defaultNavigationOptions: {
