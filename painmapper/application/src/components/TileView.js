@@ -6,24 +6,35 @@ import { withNavigation } from 'react-navigation';
 
 class TileView extends Component {
 
-    assetsList = [
-        {
-            name: 'food'
-        }, 
-        {
-            name: 'sleep'
-        },
-        {
-            name: 'pain'
-        },         
-    ];
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            assets: [
+                {
+                name: 'food', 
+                assetName: 'Food', 
+                toggleValue: true,
+            }, 
+            {
+                name: 'sleep', 
+                assetName: 'Sleep', 
+                toggleValue: false,
+            },
+            {
+                name: 'pain', 
+                assetName: 'Pain' , 
+                toggleValue: true,
+            },         ]
+        }
+    }
 
     render() {
 
-        const iconTiles = this.assetsList.map(item => {
+        const iconTiles = this.state.assets.map(item => {
             return (
                     <IconTile style={styles.tile}
-                    key={item.name}
+                    key={item}
                     name={item.name} />
             );
         })

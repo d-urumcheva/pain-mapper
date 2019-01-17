@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, Dimensions, View } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 import ToggleSwitchRow from '../components/ToggleSwitchRow';
 
 import { withNavigation } from 'react-navigation';
@@ -22,15 +22,18 @@ class AssetsPage extends Component {
 
     assetsList = [
         {
-            name: 'food'
+            name: 'food', 
+            assetName: 'Food'
         }, 
         {
-            name: 'sleep'
-        }, 
+            name: 'sleep', 
+            assetName: 'Sleep'
+        },
         {
-            name: 'energy'
-        }
-    ]
+            name: 'pain', 
+            assetName: 'Pain'
+        },         
+    ];
     
     render() {
 
@@ -38,7 +41,8 @@ class AssetsPage extends Component {
             return (
                     <ToggleSwitchRow
                     key={item.name}
-                    name={item.name} />
+                    name={item.assetName}
+                    value={item.toggleValue} />
             );
         })
 
@@ -48,6 +52,7 @@ class AssetsPage extends Component {
                     {assetView}
                 </View>
             </ScrollView>
+           
         );
     }
 }

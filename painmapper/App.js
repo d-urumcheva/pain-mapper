@@ -1,7 +1,7 @@
 console.disableYellowBox = ["Unable to symbolicate"];
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Text} from 'react-native';
+import { View, } from 'react-native';
 
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
@@ -32,7 +32,7 @@ const AppStackNavigator = createStackNavigator(
     RegisterPage: RegisterPage, 
     ForgotPassPage: ForgotPassPage,
     PersonalDetailsPage: PersonalDetailsPage,
-    
+
   }, 
   {
     defaultNavigationOptions: {
