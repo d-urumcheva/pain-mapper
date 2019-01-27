@@ -32,7 +32,23 @@ class AssetsPage extends Component {
         {
             name: 'pain', 
             assetName: 'Pain'
-        },         
+        },
+        {
+            name: 'exercise', 
+            assetName: 'Exercise'
+        }, 
+        {
+            name: 'motivation', 
+            assetName: 'Motivation'
+        },
+        {
+            name: 'symptoms', 
+            assetName: 'Symptoms'
+        },
+        {
+            name: 'mood', 
+            assetName: 'Mood'
+        }
     ];
     
     render() {
