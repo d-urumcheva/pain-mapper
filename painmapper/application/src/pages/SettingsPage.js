@@ -35,7 +35,7 @@ class SettingsPage extends Component {
                     <SettingsRow name='Help' />
                 </View>
                 <View style={styles.container}>
-                    <SettingsRow name='Log Out' />
+                    <SettingsRow name='Log Out' action='logout'/>
                 </View>
             </ScrollView>
         );

@@ -10,7 +10,7 @@ class LoginForm extends Component {
             'Logging In', 
             'We are logging you in. Bear with us.', 
             [
-                {text: 'OK', onPress: () => console.log('OK button pressed')}
+                {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard')}
             ], 
             { cancelable: false}
         )

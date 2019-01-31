@@ -42,8 +42,7 @@ export default class IconTile extends Component {
     };
 
     render() {
-        let iconName=this.props.name;
-        let iconUri=this.setIconUri(iconName);
+        let iconUri=this.setIconUri(this.props.name);
         return(
             <View style={styles.tile}>
                 <Image style={styles.icon}

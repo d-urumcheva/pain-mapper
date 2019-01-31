@@ -21,21 +21,25 @@ class SettingsRow extends Component {
         this.props.navigation.navigate(this.props.nextPage)
     }
 
+    logout = () => {
+        this.props.navigation.navigate('LoginPage');
+    }
+
     setAction = action => {
         switch(action) {
             case 'reroute': 
                 return this.reroute.bind(this);
             case 'openDetail': 
                 return this.openDetail.bind(this);
+            case 'logout': 
+                return this.logout.bind(this);
             case 'default':
                 return () => console.log('default action chosen');
         }
     }
 
     render() {
-
-        let actionName = this.props.action;
-        let action = this.setAction(actionName);
+        let action = this.setAction(this.props.action);
 
         return (
                 <TouchableOpacity style={styles.row}

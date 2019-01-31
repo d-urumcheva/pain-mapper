@@ -12,7 +12,7 @@ class AssetsPage extends Component {
             backgroundColor: 'steelblue'
         },
         headerTitleStyle: {
-            paddingLeft: 120,
+            paddingLeft: 100,
             justifyContent: 'center', 
             textAlign: 'center', 
             alignSelf: 'center',

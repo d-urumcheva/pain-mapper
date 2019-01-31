@@ -1,9 +1,15 @@
 console.disableYellowBox = ["Unable to symbolicate"];
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { View, } from 'react-native';
+import Icon from 'react-native-ionicons';
 
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+  createSwitchNavigator,
+  createAppContainer,
+} from 'react-navigation';
 
 import LoginPage from './application/src/pages/LoginPage';
 import RegisterPage from './application/src/pages/RegisterPage';
@@ -23,24 +29,70 @@ class App extends Component {
   }
 }
 
-const AppStackNavigator = createStackNavigator(
+const LoginStackNavigator = createStackNavigator(
   {
-    SettingsPage: SettingsPage,
-    AssetsPage: AssetsPage,
-    HomePage: HomePage,
-    LoginPage: LoginPage, 
-    RegisterPage: RegisterPage, 
-    ForgotPassPage: ForgotPassPage,
-    PersonalDetailsPage: PersonalDetailsPage,
-
-  }, 
+    LoginPage: {
+      screen: LoginPage,
+      navigationOptions: {
+        header: null, 
+      }
+    },
+    RegisterPage: {
+      screen: RegisterPage,
+      navigationOptions: {
+        header: null, 
+      }
+    },
+    ForgotPassPage: ForgotPassPage
+  },
   {
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: 'steelblue'
-      } 
+      }
+    }
+  })
+
+const SettingsStackNavigation = createStackNavigator( 
+  {
+    SettingsPage: SettingsPage,
+    PersonalDetailsPage: PersonalDetailsPage, 
+    AssetsPage: AssetsPage
+  }
+)
+
+const DashboardTabNavigator = createBottomTabNavigator(
+  {
+    Home: {screen: HomePage},
+    Settings: {
+      screen: SettingsStackNavigation
+    }
+  },
+  {
+    navigationOptions: {
+      header: null,
     }
   }
 )
 
-export default AppContainer = createAppContainer(AppStackNavigator);
+const DashboardStackNavigator = createStackNavigator(
+  {
+    DashboardTabNavigator: DashboardTabNavigator
+  }
+)
+
+const AppSwitchNavigator = createSwitchNavigator(
+  {
+    LoginPage: LoginStackNavigator,
+    Dashboard: { screen: DashboardStackNavigator }
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: 'steelblue'
+      }
+    }
+  }
+)
+
+export default AppContainer = createAppContainer(AppSwitchNavigator);
