@@ -1,8 +1,8 @@
+
 console.disableYellowBox = ["Unable to symbolicate"];
 
 import React, { Component } from 'react';
 import { View, } from 'react-native';
-import Icon from 'react-native-ionicons';
 
 import {
   createStackNavigator,
@@ -18,6 +18,7 @@ import HomePage from './application/src/pages/HomePage';
 import SettingsPage from './application/src/pages/SettingsPage';
 import PersonalDetailsPage from './application/src/pages/PersonalDetailsPage';
 import AssetsPage from './application/src/pages/AssetsPage';
+import LoadingPage from './application/src/pages/LoadingPage';
 
 class App extends Component {
   render() {
@@ -83,8 +84,12 @@ const DashboardStackNavigator = createStackNavigator(
 
 const AppSwitchNavigator = createSwitchNavigator(
   {
+    LoadingPage: LoadingPage,
     LoginPage: LoginStackNavigator,
     Dashboard: { screen: DashboardStackNavigator }
+  },
+  {
+    initialRouteName: 'LoadingPage'
   },
   {
     defaultNavigationOptions: {

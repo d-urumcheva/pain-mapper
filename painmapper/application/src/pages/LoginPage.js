@@ -1,51 +1,52 @@
-import React, {Component} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+
+import React, { Component } from 'react';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from 'react-native';
 import LoginForm from '../components/LoginForm';
 import Logo from '../components/Logo';
 
-import { withNavigation } from 'react-navigation';
-
-class LoginPage extends Component {
+export default class LoginPage extends Component {
 
     render() {
-        return(
-            <View style={styles.container}> 
-                <View >
-                    <Logo />
-                    <LoginForm />
-                    <View style={styles.signupView}>
-                        <Text style={styles.signupText}> 
-                            Don't have an account yet?     
+        return (
+            <View style={styles.container}>
+                <Logo style={styles.logo} />
+                <LoginForm style={styles.loginForm} />
+                <View style={styles.signupView}>
+                    <Text style={styles.signupText}>
+                        Don't have an account yet?
+                    </Text>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('RegisterPage')}>
+                        <Text style={styles.signupButton}>
+                            Sign up
                         </Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RegisterPage')}> 
-                            <Text style={styles.signupButton}>
-                                Sign up
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
     }
 }
 
-export default withNavigation(LoginPage);
-
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1, 
-        backgroundColor: 'steelblue', 
-        alignItems: 'center', 
+        flexGrow: 1,
+        backgroundColor: 'steelblue',
+        alignItems: 'center',
         justifyContent: 'center'
-    }, 
+    },
+    logo: {
+        height: Dimensions.get('window').height * 0.3,
+        alignItems: 'flex-start'
 
-    signupView : {
+    },
+    loginForm: {
+        height: Dimensions.get('window').height * 0.5,
+    },
+    signupView: {
         alignItems: 'flex-end',
-        justifyContent : 'center',
+        justifyContent: 'center',
         paddingVertical: 16,
         flexDirection: 'row'
     },
-
     signupText: {
         color: 'rgba(255,255,255,0.6)',
         fontSize: 16
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     signupButton: {
         color: '#ffffff',
         fontSize: 16,
-        fontWeight: '500', 
+        fontWeight: '500',
         paddingLeft: 5
     }
 })

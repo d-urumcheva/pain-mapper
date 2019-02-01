@@ -1,33 +1,31 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import RegisterForm from '../components/RegisterForm';
 import Logo from '../components/Logo';
 
 import { withNavigation } from 'react-navigation';
 
 class RegisterPage extends Component {
-   
-    static navigationOptions ={
+
+    static navigationOptions = {
         headerLeft: null,
         gesturesEnabled: false,
     }
-    
+
     render() {
         return (
             <View style={styles.container}>
-                <View>
-                    <Logo />
-                    <RegisterForm />
-                    <View style={styles.loginView}>
-                        <Text style={styles.loginText}>
-                            Already have an account?
+                <Logo style={styles.logo}/>
+                <RegisterForm style={styles.registerForm}/>
+                <View style={styles.loginView}>
+                    <Text style={styles.loginText}>
+                        Already have an account?
+                    </Text>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('LoginPage')}>
+                        <Text style={styles.loginButton}>
+                            Sign in
                         </Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('LoginPage')}>
-                            <Text style={styles.loginButton}>
-                                Sign in
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -35,7 +33,7 @@ class RegisterPage extends Component {
 }
 
 export default withNavigation(RegisterPage);
- 
+
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
@@ -43,15 +41,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-
-    textPrompt: {
-        textAlign: 'center',
-        fontSize: 18,
-        fontWeight: '300'
+    logo: {
+        height: Dimensions.get('window').height * 0.3,
+    }, 
+    registerForm: {
+        height: Dimensions.get('window').height * 0.5,
     },
-
-
     loginView: {
+        height: Dimensions.get('window').height * 0.1,
         alignItems: 'flex-end',
         justifyContent: 'center',
         paddingVertical: 16,
