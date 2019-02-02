@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import firebase from 'react-native-firebase';
 
 import { withNavigation } from 'react-navigation';
 
@@ -9,31 +10,45 @@ class LoginForm extends Component {
     state = {
         email: '', 
         password: '', 
-        errorMessage: null
+        errorMessage: null, 
+        buttonDisabled: true,
     }
 
     logIn = () => {
-        // firebase stuff
-        
-        Alert.alert(
-            'Logging In',
-            'We are logging you in. Bear with us.',
-            [
-                { text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard') }
-            ],
-            { cancelable: false }
-        )
+        const { email, password } = this.state
+        firebase   
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then( 
+                 () => this.props.navigation.navigate('DashboardTabNavigation'))
+            .catch( error => this.setState({ errorMessage: error.message }))
     }
 
     render() {
         return (
             <View style={styles.container}>
+                {this.state.errorMessage &&
+                    <Text style={{ color: 'white' }}>
+                        {this.state.errorMessage}
+                    </Text>
+                }
                 <TextInput style={styles.inputBox}
                     placeholder='email'
                     placeholderTextColor={"white"}
                     autoCorrect={false}
                     autoCapitalize='none'
-                    onChangeText={email => this.setState({ email })}
+                    onChangeText={email => {
+                        this.setState({ email })
+                        if (this.state.email=='' || this.state.password=='') {
+                            this.setState({buttonDisabled: true})
+                            this.setState({buttonBackgroundColor: 'white'})
+                            }
+                        else {
+                            this.setState({buttonDisabled: false})
+                            this.setState({buttonBackgroundColor: '#1c313a'}) 
+                            }
+                        }
+                    }
                     value={this.state.email}
                 />
                 <TextInput style={styles.inputBox}
@@ -42,10 +57,23 @@ class LoginForm extends Component {
                     autoCorrect={false}
                     secureTextEntry={true}
                     autoCapitalize='none'
-                    onChangeText={password => this.setState({ password })}
+                    onChangeText={password => {
+                        this.setState({ password })
+                        if (this.state.email=='' || this.state.password=='') {
+                            this.setState({buttonDisabled: true})
+                            this.setState({buttonBackgroundColor: 'white'})
+                            }
+                        else {
+                            this.setState({buttonDisabled: false})
+                            this.setState({buttonBackgroundColor: '#1c313a'}) 
+                            }
+                        }
+                    }
                     value={this.state.password}
                 />
-                <TouchableOpacity style={styles.button} onPress={this.logIn.bind(this)}>
+                <TouchableOpacity style={[this.state.buttonDisabled ? styles.buttonDisabled : styles.buttonEnabled]}
+                    disabled={this.state.buttonDisabled}
+                    onPress={this.logIn.bind(this)}>
                     <Text style={styles.buttonText}>
                         Log In
                     </Text>
@@ -77,9 +105,17 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         marginVertical: 5
     },
-    button: {
+    buttonEnabled: {
         width: 300,
         backgroundColor: '#1c313a',
+        borderRadius: 25,
+        marginVertical: 10,
+        paddingVertical: 13,
+        marginTop: 15
+    },
+    buttonDisabled: {
+        width: 300,
+        backgroundColor: '#9bb9c4',
         borderRadius: 25,
         marginVertical: 10,
         paddingVertical: 13,

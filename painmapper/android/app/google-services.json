@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "649677888864",
+    "firebase_url": "https://painmapper-b46b1.firebaseio.com",
+    "project_id": "painmapper-b46b1",
+    "storage_bucket": "painmapper-b46b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649677888864:android:7f1ab67d1723588f",
+        "android_client_info": {
+          "package_name": "com.painmapper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649677888864-fvbcc7mir9s8jpjqmhj76lqj2n17e38e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcQiM5tBUo_dj-E9IetP7XzyytO-wcseU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,3 @@
-
-console.disableYellowBox = ["Unable to symbolicate"];
-
 import React, { Component } from 'react';
 import { View, } from 'react-native';
 
@@ -90,7 +87,7 @@ const AppSwitchNavigator = createSwitchNavigator(
   },
   {
     initialRouteName: 'LoadingPage'
-  },
+  }, 
   {
     defaultNavigationOptions: {
       headerStyle: {

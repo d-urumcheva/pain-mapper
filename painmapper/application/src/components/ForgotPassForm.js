@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import { white } from 'ansi-colors';
+import firebase from 'react-native-firebase';
 
 export default class ForgotPassForm extends Component {
+    state = {
+        email: '', 
+        errorMessage: null, 
+        buttonDisabled: true,
+    }
   
     forgotPassword = () => {
-        Alert.alert(
-            'Forgotten Password', 
-            'We have sent an email with a new password to your email address. Give it a few minutes before checking your mail.', 
-            [
-                {text: 'OK', onPress: () => console.log('OK button pressed')}
-            ], 
-            { cancelable: false}
-        )
+        firebase
+            .auth()
+            .sendPasswordResetEmail(this.state.email) 
+            .then( () => console.log('Send reset password email'))
+            .catch ( error => this.setState({errorMessage: error.message}))
     }    
 
     render() {
@@ -21,12 +24,33 @@ export default class ForgotPassForm extends Component {
         <Text style={styles.textPrompt}> 
             Oh no, did you forget your password?
         </Text>
+        {this.state.errorMessage &&
+            <Text style={{ color: 'white' }}>
+                {this.state.errorMessage}
+            </Text>
+        }
         <TextInput style={styles.inputBox}
             placeholder='email'
             placeholderTextColor={"white"}
             autoCorrect={false}
+            autoCapitalize='none'
+            onChangeText={email => {
+                this.setState({ email })
+                if (this.state.email=='' || this.state.password=='') {
+                    this.setState({buttonDisabled: true})
+                    this.setState({buttonBackgroundColor: 'white'})
+                    }
+                else {
+                    this.setState({buttonDisabled: false})
+                    this.setState({buttonBackgroundColor: '#1c313a'}) 
+                    }
+                }
+            }
+            value={this.state.email}
         />
-        <TouchableOpacity style={styles.button} onPress={this.forgotPassword.bind(this)}>
+        <TouchableOpacity style={[this.state.buttonDisabled ? styles.buttonDisabled : styles.buttonEnabled]}
+                    disabled={this.state.buttonDisabled}
+                    onPress={this.forgotPassword.bind(this)}>
             <Text style={styles.buttonText}> 
                 Reset password
             </Text>
@@ -62,16 +86,22 @@ const styles = StyleSheet.create({
         color:'#ffffff',
         marginVertical: 5
     }, 
-
-    button: {
-        width:300,
-        backgroundColor:'#1c313a',
+    buttonEnabled: {
+        width: 300,
+        backgroundColor: '#1c313a',
         borderRadius: 25,
         marginVertical: 10,
-        paddingVertical: 13, 
+        paddingVertical: 13,
         marginTop: 15
-      },
-
+    },
+    buttonDisabled: {
+        width: 300,
+        backgroundColor: '#9bb9c4',
+        borderRadius: 25,
+        marginVertical: 10,
+        paddingVertical: 13,
+        marginTop: 15
+    },
       buttonText: {
         fontSize:16,
         fontWeight:'500',

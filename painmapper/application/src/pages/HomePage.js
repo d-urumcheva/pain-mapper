@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native';
 import TileView from '../components/TileView';
+import firebase from 'react-native-firebase';
 
 import { withNavigation } from 'react-navigation';
 
 class HomePage extends Component {
+
+    state = {
+        currentUser: null
+    }
+
+    componentDidMount() {
+        const { currentUser } = firebase.auth()
+        this.setState({currentUser})
+    }
     
     static navigationOptions = {
         headerLeft: null,

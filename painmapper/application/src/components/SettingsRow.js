@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
+import firebase from 'react-native-firebase';
 
 class SettingsRow extends Component {
 
@@ -22,7 +23,11 @@ class SettingsRow extends Component {
     }
 
     logout = () => {
-        this.props.navigation.navigate('LoginPage');
+        firebase
+        .auth()
+        .signOut()
+        .then(() => this.props.navigation.navigate('LoginStackNavigator'))
+        .catch(error => console.log(error.message))
     }
 
     setAction = action => {

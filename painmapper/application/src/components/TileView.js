@@ -30,26 +30,6 @@ class TileView extends Component {
                 name: 'exercise', 
                 assetName: 'Exercise', 
                 toggleValue: true
-            }, 
-            {
-                name: 'food', 
-                assetName: 'Food', 
-                toggleValue: true,
-            }, 
-            {
-                name: 'sleep', 
-                assetName: 'Sleep', 
-                toggleValue: false,
-            },
-            {
-                name: 'pain', 
-                assetName: 'Pain' , 
-                toggleValue: true,
-            },         
-            {
-                name: 'exercise', 
-                assetName: 'Exercise', 
-                toggleValue: true
             }]
         }
     }
