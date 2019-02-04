@@ -12,19 +12,27 @@ class HomePage extends Component {
     state = {
         currentUser: null
     }
+    
+    static navigationOptions = {
+        headerLeft: null,
+        gesturesEnabled: false,
+        title: 'Home',
+        headerStyle: {
+            backgroundColor: 'steelblue'
+        },
+        headerTitleStyle: {
+            paddingLeft: 140,
+            justifyContent: 'center',
+            textAlign: 'center',
+            alignSelf: 'center',
+            color: 'white'
+        },
+    }
 
     componentDidMount() {
         const { currentUser } = firebase.auth()
         this.setState({currentUser})
     }
-    
-    static navigationOptions = {
-        headerLeft: null,
-        gesturesEnabled: false, 
-        headerStyle: {
-            backgroundColor: 'steelblue'
-        }
-    }    
     
     render() {
         return (

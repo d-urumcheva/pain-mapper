@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Image, Dimensions, StyleSheet, Text } from 'react-native';
+import { View, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
-export default class IconTile extends Component {
+class IconTile extends Component {
 
     setIconUri = name => {
         switch(name) {
@@ -40,17 +41,59 @@ export default class IconTile extends Component {
 
         }
     };
+    
+    setNextPage = name => {
+        switch(name) {
+            case 'alcohol': 
+                return 'AlcoholPage';
+            case 'energy': 
+                return 'EnergyPage';
+            case 'exercise': 
+                return 'ExercisePage';
+            case 'fertility': 
+                return 'FertilityPage';
+            case 'food': 
+                return 'FoodPage';
+            case 'heartbeat': 
+                return 'HeartbeatPage';
+            case 'hydration': 
+                return 'HydrationPage';
+            case 'medication': 
+                return 'MedicationPage';
+            case 'meditation': 
+                return 'MeditationPage';
+            case 'mood': 
+                return 'MoodPage';
+            case 'motivation': 
+                return 'MotivationPage';
+            case 'pain': 
+                return 'PainPage';
+            case 'sleep': 
+                return 'SleepPage';
+            case 'smoking': 
+                return 'SmokingPage';
+            case 'symptoms': 
+                return 'SymptomsPage';
+            default: 
+                return 'HomePage';
 
+        }
+    };
     render() {
-        let iconUri=this.setIconUri(this.props.name);
+        let iconUri=this.setIconUri(this.props.name)
+        let nextPage=this.setNextPage(this.props.name)
         return(
             <View style={styles.tile}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate(nextPage)}>
                 <Image style={styles.icon}
                 source={{uri: iconUri}} />
+            </TouchableOpacity>
             </View>
         );
     }
 }
+
+export default withNavigation(IconTile);
 
 const styles = StyleSheet.create({
     tile: {

@@ -16,6 +16,8 @@ import SettingsPage from './application/src/pages/SettingsPage';
 import PersonalDetailsPage from './application/src/pages/PersonalDetailsPage';
 import AssetsPage from './application/src/pages/AssetsPage';
 import LoadingPage from './application/src/pages/LoadingPage';
+import MoodPage from './application/src/assetPages/MoodPage';
+import SleepPage from './application/src/assetPages/SleepPage';
 
 class App extends Component {
   render() {
@@ -54,6 +56,11 @@ const LoginStackNavigator = createStackNavigator(
 const HomeStackNavigator = createStackNavigator(
   {
   HomePage: HomePage,
+  MoodPage: MoodPage, 
+  SleepPage: SleepPage
+  }, 
+  {
+    initialRouteName: 'HomePage'
   }
 )
 
