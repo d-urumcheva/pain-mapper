@@ -39,7 +39,6 @@ class RegisterForm extends Component {
             .catch( (error) => {
                 console.log("Error writing document: ", error);
             });
-            
     }
 
     createAccount = () => {
@@ -102,7 +101,6 @@ class RegisterForm extends Component {
                 />
                 <TouchableOpacity style={[this.state.buttonDisabled ? styles.buttonDisabled : styles.buttonEnabled]}
                     disabled={this.state.buttonDisabled}
-                    // onPress={this.addUserToDatabase.bind(this)}>
                     onPress={this.createAccount.bind(this)}>
                     <Text style={styles.buttonText}>
                         Register

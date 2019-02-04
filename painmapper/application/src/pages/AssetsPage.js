@@ -1,86 +1,187 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import ToggleSwitchRow from '../components/ToggleSwitchRow';
+import { StyleSheet, ScrollView, View, Text, Switch, TouchableOpacity, Dimensions } from 'react-native';
+import firebase from 'react-native-firebase'
 
 import { withNavigation } from 'react-navigation';
 
+var db = firebase.firestore();
+
 class AssetsPage extends Component {
-    
+    constructor(props) {
+        super(props)
+        this.state = {}
+        this.getAssetSettings();
+    }
+
     static navigationOptions = {
         title: 'Assets',
         headerStyle: {
             backgroundColor: 'steelblue'
         },
         headerTitleStyle: {
-            paddingLeft: 100,
-            justifyContent: 'center', 
-            textAlign: 'center', 
+            paddingLeft: 80,
+            justifyContent: 'center',
+            textAlign: 'center',
             alignSelf: 'center',
             color: 'white'
-        }
+        },
     }
 
     assetsList = [
         {
-            name: 'food', 
+            name: 'food',
             assetName: 'Food'
-        }, 
+        },
         {
-            name: 'sleep', 
+            name: 'sleep',
             assetName: 'Sleep'
         },
         {
-            name: 'pain', 
+            name: 'pain',
             assetName: 'Pain'
         },
         {
-            name: 'exercise', 
+            name: 'exercise',
             assetName: 'Exercise'
-        }, 
+        },
         {
-            name: 'motivation', 
+            name: 'motivation',
             assetName: 'Motivation'
         },
         {
-            name: 'symptoms', 
+            name: 'symptoms',
             assetName: 'Symptoms'
         },
         {
-            name: 'mood', 
+            name: 'mood',
             assetName: 'Mood'
         }
     ];
-    
-    render() {
 
+    updateAssetSettings() {
+        let user = firebase.auth().currentUser
+        db
+            .collection("users")
+            .doc(user.uid)
+            .collection("settings")
+            .doc("assetSettings")
+            .set({
+                state: this.state
+            })
+            .then(() => {
+                console.log("Document successfully written!");
+            })
+            .catch((error) => {
+                console.log("Error writing document: ", error);
+            });
+
+    }
+
+    getAssetSettings() {
+        let user = firebase.auth().currentUser
+        db
+            .collection("users")
+            .doc(user.uid)
+            .collection("settings")
+            .doc("assetSettings")
+            .get()
+            .then(doc => {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                    this.setState({
+                        food: doc.data().state.food,
+                        sleep: doc.data().state.sleep,
+                        pain: doc.data().state.pain,
+                        exercise: doc.data().state.exercise,
+                        motivation: doc.data().state.motivation,
+                        symptoms: doc.data().state.symptoms,
+                        mood: doc.data().state.mood
+                    })
+                } else {
+                    console.log("No such document!");
+                }
+            })
+            .catch(function (error) {
+                console.log("Error getting document:", error);
+            });
+    }
+
+    render() {
         const assetView = this.assetsList.map(item => {
             return (
-                    <ToggleSwitchRow
-                    key={item.name}
-                    name={item.assetName}
-                    value={item.toggleValue} />
+                <View style={styles.row} key={item.name}>
+                    <Text style={styles.rowText}>
+                        {item.assetName}
+                    </Text>
+                    <Switch
+                        value={this.state[item.name]}
+                        onValueChange={value => {this.setState({ [item.name]: value }) }}
+                    />
+                </View>
             );
         })
 
         return (
-            <ScrollView style={styles.scrollContainer} >
+            <ScrollView style={styles.scrollContainer}>
                 <View style={styles.container}>
                     {assetView}
                 </View>
+                <TouchableOpacity style={styles.button}
+                    onPress={ () => {
+                        this.updateAssetSettings.bind(this)
+                        this.props.navigation.navigate('SettingsPage')}}>
+                    <Text style={styles.buttonText}>
+                        Done
+                    </Text>
+                </TouchableOpacity>
             </ScrollView>
-           
         );
     }
 }
 
 export default withNavigation(AssetsPage);
- 
+
 const styles = StyleSheet.create({
     scrollContainer: {
-        flex: 1, 
         backgroundColor: '#efeff4',
+        flexGrow: 1,
     },
     container: {
-        marginVertical: 10
-    }
+        marginVertical: 10,
+    },
+    row: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        height: 55,
+        backgroundColor: '#ffffff',
+        marginVertical: 1,
+        justifyContent: 'space-between',
+    },
+    rowText: {
+        fontSize: 20,
+        color: '#333333',
+        paddingLeft: 10,
+        textAlignVertical: 'center'
+    },
+    toggle: {
+        width: 20,
+        height: 10
+    },
+    button: {
+        width: 100,
+        backgroundColor: '#1c313a',
+        borderRadius: 25,
+        marginVertical: 10,
+        paddingVertical: 13,
+        marginTop: 15,
+        alignSelf: 'center',
+
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#ffffff',
+        textAlign: 'center'
+    },
 })
