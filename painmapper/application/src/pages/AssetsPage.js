@@ -9,8 +9,16 @@ var db = firebase.firestore();
 class AssetsPage extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
-        this.getAssetSettings();
+        
+    }
+    state = {
+        food: false, 
+        sleep: false, 
+        pain: false, 
+        exercise: false, 
+        motivation: false, 
+        symptoms: false, 
+        mood: false
     }
 
     static navigationOptions = {
@@ -58,25 +66,6 @@ class AssetsPage extends Component {
         }
     ];
 
-    updateAssetSettings() {
-        let user = firebase.auth().currentUser
-        db
-            .collection("users")
-            .doc(user.uid)
-            .collection("settings")
-            .doc("assetSettings")
-            .set({
-                state: this.state
-            })
-            .then(() => {
-                console.log("Document successfully written!");
-            })
-            .catch((error) => {
-                console.log("Error writing document: ", error);
-            });
-
-    }
-
     getAssetSettings() {
         let user = firebase.auth().currentUser
         db
@@ -106,6 +95,29 @@ class AssetsPage extends Component {
             });
     }
 
+    updateAssetSettings() {
+        let user = firebase.auth().currentUser
+        db
+            .collection("users")
+            .doc(user.uid)
+            .collection("settings")
+            .doc("assetSettings")
+            .set({
+                state: this.state
+            })
+            .then(() => {
+                console.log("Document successfully written!");
+            })
+            .catch((error) => {
+                console.log("Error writing document: ", error);
+            });
+
+    }
+
+    componentWillMount() {
+        this.getAssetSettings();
+    }
+
     render() {
         const assetView = this.assetsList.map(item => {
             return (
@@ -115,7 +127,7 @@ class AssetsPage extends Component {
                     </Text>
                     <Switch
                         value={this.state[item.name]}
-                        onValueChange={value => {this.setState({ [item.name]: value }) }}
+                        onValueChange={value => { this.setState({ [item.name]: value }) }}
                     />
                 </View>
             );
@@ -127,9 +139,10 @@ class AssetsPage extends Component {
                     {assetView}
                 </View>
                 <TouchableOpacity style={styles.button}
-                    onPress={ () => {
-                        this.updateAssetSettings.bind(this)
-                        this.props.navigation.navigate('SettingsPage')}}>
+                    onPress={() => {
+                        this.updateAssetSettings()
+                        this.props.navigation.navigate('HomePage')
+                    }}>
                     <Text style={styles.buttonText}>
                         Done
                     </Text>

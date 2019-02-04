@@ -51,6 +51,12 @@ const LoginStackNavigator = createStackNavigator(
     }
   })
 
+const HomeStackNavigator = createStackNavigator(
+  {
+  HomePage: HomePage,
+  }
+)
+
 const SettingsStackNavigation = createStackNavigator( 
   {
     SettingsPage: SettingsPage,
@@ -61,7 +67,7 @@ const SettingsStackNavigation = createStackNavigator(
 
 const DashboardTabNavigator = createBottomTabNavigator(
   {
-    Home: {screen: HomePage},
+    Home: {screen: HomeStackNavigator},
     Settings: {
       screen: SettingsStackNavigation
     }
