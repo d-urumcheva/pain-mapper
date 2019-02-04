@@ -36,10 +36,10 @@ class TileView extends Component {
 
     render() {
 
-        const iconTiles = this.state.assets.map(item => {
+        const iconTiles = this.state.assets.map((item, index)=> {
             return (
                     <IconTile style={styles.tile}
-                    key={item}
+                    key={index}
                     name={item.name} />
             );
         })

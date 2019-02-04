@@ -4,20 +4,11 @@ import { StyleSheet, Text, View, Switch } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 class ToggleSwitchRow extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            switchValue: false
-        }
-    }
-
-    reroute = () => {
-        this.props.navigation.navigate(this.props.nextPage)
+    state = {
+        switchValue: false
     }
 
     render() {
-
         return (
                 <View style={styles.row}>
                     <Text style={styles.rowText}> 
@@ -25,7 +16,8 @@ class ToggleSwitchRow extends Component {
                     </Text>
                     <Switch 
                     value={this.state.switchValue}
-                    onValueChange={ value => this.setState({switchValue: value})} />
+                    onValueChange={ value => this.setState({switchValue: value})} 
+                    />
                 </View>
         )
     }

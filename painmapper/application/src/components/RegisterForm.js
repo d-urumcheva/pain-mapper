@@ -4,7 +4,18 @@ import firebase from 'react-native-firebase';
 
 import { withNavigation } from 'react-navigation';
 
+firebase.initializeApp({
+    apiKey: 'AIzaSyAPvdG99_5OXi4LbOlwxFsGW08ggJhgHhs',
+    authDomain: "painmapper-b46b1.firebaseapp.com",
+    projectId: 'painmapper-b46b1'
+  });
+
+  var db = firebase.firestore();
+
 class RegisterForm extends Component {
+    constructor() {
+        super();
+    }
     state = {
         email: '', 
         password: '', 
@@ -12,11 +23,33 @@ class RegisterForm extends Component {
         buttonDisabled: true,
     }
 
+    addUserToDatabase() {
+        let user = firebase.auth().currentUser
+        let userName = this.state.email.split('@')[0]
+        db
+            .collection("users")
+            .doc(user.uid)
+            .set({
+                email: this.state.email, 
+                userName: userName
+            })
+            .then( () => {
+                console.log("Document successfully written!");
+            })
+            .catch( (error) => {
+                console.log("Error writing document: ", error);
+            });
+            
+    }
+
     createAccount = () => {
         firebase
             .auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
-            .then( () => this.props.navigation.navigate('HomePage'))
+            .then( () => {
+                this.props.navigation.navigate('HomePage')
+                this.addUserToDatabase();
+            })
             .catch(error => this.setState({ errorMessage: error.message }))
     }
 
@@ -69,6 +102,7 @@ class RegisterForm extends Component {
                 />
                 <TouchableOpacity style={[this.state.buttonDisabled ? styles.buttonDisabled : styles.buttonEnabled]}
                     disabled={this.state.buttonDisabled}
+                    // onPress={this.addUserToDatabase.bind(this)}>
                     onPress={this.createAccount.bind(this)}>
                     <Text style={styles.buttonText}>
                         Register
