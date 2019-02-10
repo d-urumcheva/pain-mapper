@@ -3,8 +3,6 @@ import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native';
 import TileView from '../components/TileView';
 import firebase from 'react-native-firebase';
 
-import FontAwesome, { Icons, IconTypes } from 'react-native-fontawesome';
-
 import { withNavigation } from 'react-navigation';
 
 class HomePage extends Component {
@@ -42,7 +40,6 @@ class HomePage extends Component {
                        This will be a calendar-like feature
                     </Text>
                     <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>
-                        <FontAwesome >{Icons.home}</FontAwesome>
                     </Text>        
                 </View>
                 <TileView />

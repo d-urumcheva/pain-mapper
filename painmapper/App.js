@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { View, } from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 import {
   createStackNavigator,
   createBottomTabNavigator,
   createSwitchNavigator,
+  createMaterialTopTabNavigator,
   createAppContainer,
 } from 'react-navigation';
 
@@ -16,8 +18,9 @@ import SettingsPage from './application/src/pages/SettingsPage';
 import PersonalDetailsPage from './application/src/pages/PersonalDetailsPage';
 import AssetsPage from './application/src/pages/AssetsPage';
 import LoadingPage from './application/src/pages/LoadingPage';
-import MoodPage from './application/src/assetPages/MoodPage';
 import SleepPage from './application/src/assetPages/SleepPage';
+import WeatherPage from './application/src/assetPages/WeatherPage';
+import MoodDailyView from './application/src/assetComponents/MoodDailyView';
 
 class App extends Component {
   render() {
@@ -53,11 +56,44 @@ const LoginStackNavigator = createStackNavigator(
     }
   })
 
+  const MoodTabNavigator = createMaterialTopTabNavigator(
+    {
+      Daily: {
+        screen: MoodDailyView,
+        navigationOptions: {
+          header: null, 
+        }
+      }, 
+      Weekly: {
+        screen: MoodDailyView, 
+        navigationOptions: {
+          header: null, 
+        }
+      },
+      Monthly: {
+        screen: MoodDailyView, 
+        navigationOptions: {
+          header: null, 
+        }
+      }
+    }, 
+    {
+      swipeEnabled: false
+    }
+  )
+
+  MoodTabNavigator.navigationOptions = {
+    header: null,
+  };
+
 const HomeStackNavigator = createStackNavigator(
   {
   HomePage: HomePage,
-  MoodPage: MoodPage, 
-  SleepPage: SleepPage
+  MoodPage: {
+    screen: MoodTabNavigator
+  }, 
+  SleepPage: SleepPage, 
+  WeatherPage: WeatherPage
   }, 
   {
     initialRouteName: 'HomePage'
@@ -74,9 +110,19 @@ const SettingsStackNavigation = createStackNavigator(
 
 const DashboardTabNavigator = createBottomTabNavigator(
   {
-    Home: {screen: HomeStackNavigator},
+    Home: {
+      screen: HomeStackNavigator, 
+      navigationOptions: {
+        tabBarLabel: 'Home',
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={25} color={tintColor} />
+      },
+    },
     Settings: {
-      screen: SettingsStackNavigation
+      screen: SettingsStackNavigation,
+      navigationOptions: {
+        tabBarLabel: 'Settings',
+        tabBarIcon: ({ tintColor }) => <Icon name="setting" size={25} color={tintColor} />
+      },
     }
   },
   {

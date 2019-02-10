@@ -18,7 +18,8 @@ class AssetsPage extends Component {
         exercise: false, 
         motivation: false, 
         symptoms: false, 
-        mood: false
+        mood: false, 
+        weather: false,
     }
 
     static navigationOptions = {
@@ -63,6 +64,10 @@ class AssetsPage extends Component {
         {
             name: 'mood',
             assetName: 'Mood'
+        },
+        {
+            name: 'weather',
+            assetName: 'Weather'
         }
     ];
 
@@ -76,7 +81,6 @@ class AssetsPage extends Component {
             .get()
             .then(doc => {
                 if (doc.exists) {
-                    console.log("Document data:", doc.data());
                     this.setState({
                         food: doc.data().state.food,
                         sleep: doc.data().state.sleep,
@@ -84,7 +88,8 @@ class AssetsPage extends Component {
                         exercise: doc.data().state.exercise,
                         motivation: doc.data().state.motivation,
                         symptoms: doc.data().state.symptoms,
-                        mood: doc.data().state.mood
+                        mood: doc.data().state.mood,
+                        weather: doc.data().state.weather
                     })
                 } else {
                     console.log("No such document!");
@@ -111,7 +116,6 @@ class AssetsPage extends Component {
             .catch((error) => {
                 console.log("Error writing document: ", error);
             });
-
     }
 
     componentWillMount() {

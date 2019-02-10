@@ -36,6 +36,8 @@ class IconTile extends Component {
                 return 'https://i.imgur.com/t7fB1M8.png';
             case 'symptoms': 
                 return 'https://i.imgur.com/Zp5w9n8.png';
+            case 'weather': 
+                return 'https://i.imgur.com/B9TTyJM.png'
             default: 
                 return 'https://cdn2.iconfinder.com/data/icons/rounded-white-emoticon/139/Painful-RoundedWhite_emoticon-512.png';
 
@@ -74,6 +76,8 @@ class IconTile extends Component {
                 return 'SmokingPage';
             case 'symptoms': 
                 return 'SymptomsPage';
+            case 'weather':
+                return 'WeatherPage';
             default: 
                 return 'HomePage';
 

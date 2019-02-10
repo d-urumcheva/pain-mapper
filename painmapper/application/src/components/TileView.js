@@ -25,7 +25,6 @@ class TileView extends Component {
             .get()
             .then(doc => {
                 if (doc.exists) {
-                    console.log("Document data:", doc.data());
                     this.setState({
                         food: doc.data().state.food,
                         sleep: doc.data().state.sleep,
@@ -33,7 +32,8 @@ class TileView extends Component {
                         exercise: doc.data().state.exercise,
                         motivation: doc.data().state.motivation,
                         symptoms: doc.data().state.symptoms,
-                        mood: doc.data().state.mood
+                        mood: doc.data().state.mood, 
+                        weather: doc.data().state.weather, 
                     })
                 } else {
                     console.log("No such document!");
