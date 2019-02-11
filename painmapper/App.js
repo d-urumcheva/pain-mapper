@@ -21,6 +21,7 @@ import LoadingPage from './application/src/pages/LoadingPage';
 import SleepPage from './application/src/assetPages/SleepPage';
 import WeatherPage from './application/src/assetPages/WeatherPage';
 import MoodDailyView from './application/src/assetComponents/MoodDailyView';
+import MoodWeeklyView from './application/src/assetComponents/MoodWeeklyView';
 
 class App extends Component {
   render() {
@@ -65,7 +66,7 @@ const LoginStackNavigator = createStackNavigator(
         }
       }, 
       Weekly: {
-        screen: MoodDailyView, 
+        screen: MoodWeeklyView, 
         navigationOptions: {
           header: null, 
         }
