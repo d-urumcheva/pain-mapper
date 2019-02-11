@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Image, ScrollView, Dimensions, TouchableOpacity, ViewPagerAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
 
@@ -10,13 +10,12 @@ export default class MoodDailyView extends Component {
   constructor() {
     super()
     this.state = {
-      dateString: new Date().toJSON().slice(0, 10),
       selectedDateString: new Date().toJSON().slice(0, 10),
-      date: new Date(),
       selectedDate: new Date(),
       selectedMood: 720,
       selectedMoodDetails: "",
     }
+    this.getMoodDetails(this.state.selectedDateString);
   }
 
   updateMoodDetails() {
@@ -39,21 +38,19 @@ export default class MoodDailyView extends Component {
       });
   }
 
-  getMoodDetails() {
+  getMoodDetails(date) {
     let user = firebase.auth().currentUser
     db
       .collection("users")
       .doc(user.uid)
       .collection("mood")
-      .doc(this.state.selectedDateString)
+      .doc(date)
       .get()
       .then(doc => {
         if (doc.exists) {
           this.setState({
-            selectedDate: doc.data().selectedDate,
             selectedMood: doc.data().selectedMood,
             selectedMoodDetails: doc.data().selectedMoodDetails,
-
           })
           console.log(this.state)
         } else {
@@ -74,7 +71,7 @@ export default class MoodDailyView extends Component {
     this.setState({ selectedDate: prevDay })
     var prevDayString = prevDay.toJSON().slice(0, 10);
     this.setState({ selectedDateString: prevDayString });
-    this.getMoodDetails();
+    this.getMoodDetails(prevDayString)    
   }
 
   setNextDay() {
@@ -82,15 +79,7 @@ export default class MoodDailyView extends Component {
     this.setState({ selectedDate: nextDay })
     var nextDayString = nextDay.toJSON().slice(0, 10);
     this.setState({ selectedDateString: nextDayString });
-    this.getMoodDetails();
-  }
-
-  componentWillMount() {
-    this.getMoodDetails();
-  }
-
-  componentDidMount() {
-    this.getMoodDetails();
+    this.getMoodDetails(nextDayString)
   }
 
   render() {
@@ -152,6 +141,7 @@ export default class MoodDailyView extends Component {
         <View style={styles.container}>
           <ScrollView horizontal={true}
             pagingEnabled={true}
+            contentOffset={{ x: this.state.selectedMood }}
             onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
             <View style={styles.mood1}>
               <Image style={styles.icon}
@@ -202,7 +192,6 @@ export default class MoodDailyView extends Component {
       );
     }
   };
-
 }
 
 const styles = StyleSheet.create({
