@@ -52,7 +52,6 @@ export default class MoodDailyView extends Component {
             selectedMood: doc.data().selectedMood,
             selectedMoodDetails: doc.data().selectedMoodDetails,
           })
-          console.log(this.state)
         } else {
           this.setState({
             selectedMood: 720,
@@ -60,6 +59,7 @@ export default class MoodDailyView extends Component {
           })
           console.log("No such document!");
         }
+        this.refs.scrollView.scrollTo({ x: this.state.selectedMood, y: 0 });
       })
       .catch(function (error) {
         console.log("Error getting document:", error);
@@ -71,7 +71,7 @@ export default class MoodDailyView extends Component {
     this.setState({ selectedDate: prevDay })
     var prevDayString = prevDay.toJSON().slice(0, 10);
     this.setState({ selectedDateString: prevDayString });
-    this.getMoodDetails(prevDayString)    
+    this.getMoodDetails(prevDayString)
   }
 
   setNextDay() {
@@ -87,7 +87,8 @@ export default class MoodDailyView extends Component {
     if (this.state.selectedDateString == today) {
       return (
         <View style={styles.container}>
-          <ScrollView horizontal={true}
+          <ScrollView ref='scrollView'
+            horizontal={true}
             pagingEnabled={true}
             onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
             <View style={styles.mood1}>
@@ -139,7 +140,8 @@ export default class MoodDailyView extends Component {
     else {
       return (
         <View style={styles.container}>
-          <ScrollView horizontal={true}
+          <ScrollView ref='scrollView'
+            horizontal={true}
             pagingEnabled={true}
             contentOffset={{ x: this.state.selectedMood }}
             onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
