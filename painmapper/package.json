@@ -9,11 +9,15 @@
   "dependencies": {
     "react": "16.6.3",
     "react-native": "0.57.8",
-    "react-native-elements": "^1.0.0",
-    "react-native-firebase": "^5.2.1",
-    "react-native-gesture-handler": "^1.0.12",
-    "react-native-vector-icons": "^6.2.0",
-    "react-navigation": "^3.0.9"
+    "react-native-chart-kit": "^2.0.0",
+    "react-native-elements": "1.0.0",
+    "react-native-firebase": "5.2.1",
+    "react-native-gesture-handler": "1.0.12",
+    "react-native-responsive-linechart": "1.5.0",
+    "react-native-svg": "8.0.0",
+    "react-native-svg-charts": "^5.2.0",
+    "react-native-vector-icons": "6.2.0",
+    "react-navigation": "3.0.9"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

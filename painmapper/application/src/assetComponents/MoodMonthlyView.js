@@ -1,316 +1,245 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, ScrollView, Dimensions, TouchableOpacity, ViewPagerAndroid } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
+import MoodIcon from '../components/MoodIcon'
 
 var db = firebase.firestore();
 
 export default class MoodMonthlyView extends Component {
 
-  constructor() {
-    super()
-    this.state = {
-      selectedDateString: new Date().toJSON().slice(0, 10),
-      selectedDate: new Date(),
-      selectedMood: 720,
-      selectedMoodDetails: "",
+    constructor() {
+        super()
+        this.state = {
+            selectedMonth: new Date(),
+            selectedMonthDatesStrings: [],
+            monthlyStats: [],
+            isLoading: true,
+            moodByDays: [],
+            daysOfMonth: []
+        };
+
+        this.getMonthlyMoodDetails = this.getMonthlyMoodDetails.bind(this);
     }
-    this.getMoodDetails(this.state.selectedDateString);
-  }
 
-  updateMoodDetails() {
-    let user = firebase.auth().currentUser
-    db
-      .collection("users")
-      .doc(user.uid)
-      .collection("mood")
-      .doc(this.state.selectedDateString)
-      .set({
-        selectedDate: this.state.selectedDate,
-        selectedMood: this.state.selectedMood,
-        selectedMoodDetails: this.state.selectedMoodDetails
-      })
-      .then(() => {
-        console.log("Document successfully written!");
-      })
-      .catch((error) => {
-        console.log("Error writing document: ", error);
-      });
-  }
-
-  getMoodDetails(date) {
-    let user = firebase.auth().currentUser
-    db
-      .collection("users")
-      .doc(user.uid)
-      .collection("mood")
-      .doc(date)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          this.setState({
-            selectedMood: doc.data().selectedMood,
-            selectedMoodDetails: doc.data().selectedMoodDetails,
-          })
-        } else {
-          this.setState({
-            selectedMood: 720,
-            selectedMoodDetails: "",
-          })
-          console.log("No such document!");
+    async setMonthDates(month) {
+        let dates = [];
+        let day = month;
+        let numberOfDays = day.toJSON().slice(8, 10)
+        dates.push(day.toJSON().slice(0, 10));
+        for (var i = 1; i < numberOfDays; i++) {
+            day = new Date(day.getTime() - 864e5);
+            dates.push(day.toJSON().slice(0, 10));
         }
-        this.refs.scrollView.scrollTo({ x: this.state.selectedMood, y: 0 });
-      })
-      .catch(function (error) {
-        console.log("Error getting document:", error);
-      });
-  }
-
-  setPreviousDay() {
-    var prevDay = new Date(this.state.selectedDate.getTime() - 864e5);
-    this.setState({ selectedDate: prevDay })
-    var prevDayString = prevDay.toJSON().slice(0, 10);
-    this.setState({ selectedDateString: prevDayString });
-    this.getMoodDetails(prevDayString)
-  }
-
-  setNextDay() {
-    var nextDay = new Date(this.state.selectedDate.getTime() + 864e5);
-    this.setState({ selectedDate: nextDay })
-    var nextDayString = nextDay.toJSON().slice(0, 10);
-    this.setState({ selectedDateString: nextDayString });
-    this.getMoodDetails(nextDayString)
-  }
-
-  render() {
-    today = new Date().toJSON().slice(0, 10);
-    if (this.state.selectedDateString == today) {
-      return (
-        <View style={styles.container}>
-          <ScrollView ref='scrollView'
-            horizontal={true}
-            pagingEnabled={true}
-            onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
-            <View style={styles.mood1}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
-            </View>
-            <View style={styles.mood2}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/7dsJ98d.png' }} />
-            </View>
-            <View style={styles.mood3}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/lnQtHny.png' }} />
-            </View>
-            <View style={styles.mood4}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/LvyQeZi.png' }} />
-            </View>
-            <View style={styles.mood5}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/ZRoBJVy.png' }} />
-            </View>
-          </ScrollView>
-          <View style={styles.dateNavigatorShort}>
-            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-            <Text style={styles.dateText}> Today </Text>
-          </View>
-          <Text style={styles.infoText}>
-            Swipe left or right to select your mood
-              </Text>
-          <TextInput style={styles.inputTextBox}
-            placeholder={'Tell us more about yourself today'} placeholderTextColor={"black"}
-            fontStyle={this.state.selectedMoodDetails.length == 0 ? 'italic' : 'normal'}
-            multiline={true}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ selectedMoodDetails: text })}
-            value={this.state.selectedMoodDetails}
-          />
-          <TouchableOpacity style={styles.button}
-            onPress={() => this.updateMoodDetails()}>
-            <Text style={styles.buttonText}>
-              Update
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
+        this.setState({ selectedMonthDatesStrings: dates })
     }
-    else {
-      return (
-        <View style={styles.container}>
-          <ScrollView ref='scrollView'
-            horizontal={true}
-            pagingEnabled={true}
-            contentOffset={{ x: this.state.selectedMood }}
-            onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
-            <View style={styles.mood1}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
-            </View>
-            <View style={styles.mood2}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/7dsJ98d.png' }} />
-            </View>
-            <View style={styles.mood3}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/lnQtHny.png' }} />
-            </View>
-            <View style={styles.mood4}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/LvyQeZi.png' }} />
-            </View>
-            <View style={styles.mood5}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/ZRoBJVy.png' }} />
-            </View>
-          </ScrollView>
-          <View style={styles.dateNavigatorLong}>
-            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-            <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
-            <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
-          </View>
 
-          <Text style={styles.infoText}>
-            Swipe left or right to select your mood
-              </Text>
-          <TextInput style={styles.inputTextBox}
-            placeholder={'Tell us more about yourself today'} placeholderTextColor={"black"}
-            fontStyle={this.state.selectedMoodDetails.length == 0 ? 'italic' : 'normal'}
-            multiline={true}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ selectedMoodDetails: text })}
-            value={this.state.selectedMoodDetails}
-          />
-          <TouchableOpacity style={styles.button}
-            onPress={() => this.updateMoodDetails()}>
-            <Text style={styles.buttonText}>
-              Update
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
+    delay = ms => new Promise(res => setTimeout(res, ms));
+
+    async getMonthlyMoodDetails(month) {
+
+        await this.setMonthDates(month);
+
+        let user = firebase.auth().currentUser
+        let monthDays = this.state.selectedMonthDatesStrings;
+        let moodDays = [];
+        let moodByDays = [];
+        let daysOfMonth = [];
+        monthDays.forEach(function (item) {
+            db
+                .collection("users")
+                .doc(user.uid)
+                .collection("mood")
+                .doc(item)
+                .get()
+                .then(doc => {
+                    let date, dateString, mood, moodDetail, moodString;
+                    let object;
+
+                    if (doc.exists) {
+                        date = doc.data().selectedDate
+                        dateString = item
+                        mood = doc.data().selectedMood
+                        moodString = doc.data().selectedMoodString
+                        moodDetail = doc.data().selectedMoodDetails
+                        object = {
+                            date,
+                            dateString,
+                            mood,
+                            moodString,
+                            moodDetail
+                        }
+                        moodDays.push(object)
+                        moodDays.sort(function (a, b) {
+                            return a.date - b.date;
+                        });
+                    } else {
+                        dateString = item
+                        date = new Date(item);
+                        mood = 0,
+                            moodString = "No mood recorded"
+                        moodDetail = ""
+                        object = {
+                            date,
+                            dateString,
+                            mood,
+                            moodString,
+                            moodDetail
+                        }
+                        moodDays.push(object)
+                        moodDays.sort(function (a, b) {
+                            return a.date - b.date;
+                        });
+                        console.log("No such document!");
+                    }
+                })
+                .catch(function (error) {
+                    console.log("Error getting document:", error);
+                });
+        })
+        // needs to wait on promise results
+
+        await this.delay(500);
+        moodDays.forEach(function (item) {
+            var options = { weekday: 'long' };
+            daysOfMonth.push(new Intl.DateTimeFormat('en-US', options).format(item.date).slice(0, 1));
+            moodByDays.push(item.mood);
+        })
+
+        await this.delay(500);
+        this.setState({
+            monthlyStats: moodDays,
+            isLoading: false,
+            moodByDays: moodByDays,
+            daysOfMonth: daysOfMonth
+        })
     }
-  };
+
+    setPreviousMonth() {
+        var prevMonth = new Date(this.state.selectedDate.getTime() - 7 * 864e5);
+        this.setState({ selectedMonth: prevMonth })
+
+        var prevMonthString = prevMonth.toJSON().slice(0, 10);
+        this.setState({ selectedMonthString: prevMonthString });
+        this.getMoodDetails(prevMonthString)
+    }
+
+    setNextMonth() {
+        var nextMonth = new Date(this.state.selectedDate.getTime() + 7 * 864e5);
+        this.setState({ selectedMonth: nextMonth })
+        var nextMonthString = nextMonth.toJSON().slice(0, 10);
+        this.setState({ selectedMonthString: nextMonthString });
+        this.getMoodDetails(nextMonthString)
+    }
+
+    componentWillMount() {
+        this.getMonthlyMoodDetails(this.state.selectedMonth)
+    }
+
+    render() {
+        const monthlyView = this.state.monthlyStats.map(item => {
+            return (
+                <View style={styles.row} key={item.dateString}>
+                    <Text style={styles.dateString}>
+                        {item.dateString}
+                    </Text>
+                    <View style={styles.moodDetails}>
+                        <MoodIcon offset={item.mood} style={styles.icon}/>
+                        <View  style={styles.moodTextDetail}>
+                            <Text style={styles.rowText}>
+                                {item.moodString}
+                            </Text>
+                            <Text style={styles.rowText}>
+                                {item.moodDetail}
+                            </Text>
+                        </View>
+
+                    </View>
+                </View>
+            );
+        })
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            )
+        }
+        else {
+            return (
+                <ScrollView style={styles.container}>
+                    <LineChart
+                        data={{
+                            labels: this.state.daysOfMonth,
+                            datasets: [{
+                                data: this.state.moodByDays
+                            }]
+                        }}
+                        width={Dimensions.get('window').width} // from react-native
+                        height={220}
+                        withInnerLines={false}
+                        chartConfig={{
+                            backgroundColor: '#e26a00',
+                            backgroundGradientFrom: '#fb8c00',
+                            backgroundGradientTo: '#ffa726',
+                            decimalPlaces: 2,
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16
+                            }
+                        }}
+                        bezier
+                        style={{
+                            marginVertical: 8,
+                            borderRadius: 16
+                        }}
+                    />
+                    {monthlyView}
+                </ScrollView>
+            )
+        }
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dateNavigatorShort: {
-    position: 'absolute',
-    top: 20,
-    left: 110,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10
-  },
-  dateNavigatorLong: {
-    position: 'absolute',
-    top: 20,
-    left: 85,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10
-  },
-  dateText: {
-    fontSize: 25,
-    paddingHorizontal: 10,
-    color: 'white'
-  },
-  infoText: {
-    position: 'absolute',
-    top: 250,
-    left: 60,
-    color: 'white',
-    fontSize: 16,
-    paddingTop: 100,
-    fontStyle: 'italic'
-  },
-  inputTextBox: {
-    position: 'absolute',
-    top: 400,
-    left: 40,
-    backgroundColor: 'white',
-    opacity: 0.2,
-    height: 90,
-    width: 280,
-    borderRadius: 15,
-    fontSize: 15,
-    padding: 10,
-  },
-  button: {
-    position: 'absolute',
-    bottom: 10,
-    width: 100,
-    height: 35,
-    backgroundColor: 'white',
-    opacity: 0.5,
-    borderRadius: 25,
-    alignItems: 'center',
-    textAlign: 'center',
-    paddingVertical: 7,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#ffffff',
-    textAlign: 'center',
-    textAlignVertical: 'center'
-  },
-
-  mood1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#7d56c0',
-    width: Dimensions.get('window').width,
-
-  },
-  mood2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#5b6abe',
-    width: Dimensions.get('window').width,
-
-  },
-  mood3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#00bbd2',
-    width: Dimensions.get('window').width,
-
-  },
-  mood4: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9bca64',
-    width: Dimensions.get('window').width,
-
-  },
-  mood5: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4bae4f',
-    width: Dimensions.get('window').width,
-  },
-  icon: {
-    position: 'absolute',
-    top: 10,
-    left: -4,
-    opacity: 0.4,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').width,
-  },
+    container: {
+        flexGrow: 1,
+        backgroundColor: '#efeff4'
+    },
+    loading: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    },
+    dateString: {
+        fontSize: 10,
+        fontStyle: 'italic',
+        color: 'lightslategrey',
+        paddingLeft: 4,
+    },
+    moodDetails: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        height: 55,
+        backgroundColor: '#ffffff',
+        marginVertical: 1,
+    },
+    icon: {
+        justifyContent: 'center', 
+    },
+    moodTextDetail: {
+        paddingLeft: 10
+    },
+    row: {
+        marginVertical: 0,
+    },
+    rowText: {
+        fontSize: 14,
+        color: '#333333',
+        paddingLeft: 10,
+        textAlignVertical: 'center'
+    },
 })

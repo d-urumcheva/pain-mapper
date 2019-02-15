@@ -22,6 +22,7 @@ import SleepPage from './application/src/assetPages/SleepPage';
 import WeatherPage from './application/src/assetPages/WeatherPage';
 import MoodDailyView from './application/src/assetComponents/MoodDailyView';
 import MoodWeeklyView from './application/src/assetComponents/MoodWeeklyView';
+import MoodMonthlyView from './application/src/assetComponents/MoodMonthlyView';
 
 class App extends Component {
   render() {
@@ -72,7 +73,7 @@ const LoginStackNavigator = createStackNavigator(
         }
       },
       Monthly: {
-        screen: MoodDailyView, 
+        screen: MoodMonthlyView, 
         navigationOptions: {
           header: null, 
         }

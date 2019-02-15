@@ -1,36 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, ScrollView, Dimensions } from 'react-native';
-import LineChart from 'react-native-responsive-linechart';
+import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
+import MoodIcon from '../components/MoodIcon';
 
 var db = firebase.firestore();
-
-const data = [100, 10, 20, 30, 50];
-const config = {
-  line: {
-    strokeWidth: 1,
-    strokeColor: "#216D99"
-  },
-  area: {
-    gradientFrom: "#2e86de",
-    gradientFromOpacity: 1,
-    gradientTo: "#87D3FF",
-    gradientToOpacity: 1
-  },
-  yAxis: {
-    labelColor: "#c8d6e5"
-  },
-  grid: {
-    strokeColor: "#c8d6e5",
-    stepSize: 30
-  },
-  insetY: 10,
-  insetX: 10,
-  interpolation: "spline",
-  backgroundColor: "#fff"
-};
-
 
 export default class MoodWeeklyView extends Component {
 
@@ -39,15 +14,37 @@ export default class MoodWeeklyView extends Component {
         this.state = {
             selectedWeek: new Date(),
             selectedWeekDatesStrings: [],
-            weeklyStats: []
-        }
+            weeklyStats: [],
+            isLoading: true,
+            moodByDays: [],
+            daysOfWeek: []
+        };
+
+        this.getWeeklyMoodDetails = this.getWeeklyMoodDetails.bind(this);
     }
 
-    
-    getWeeklyMoodDetails(week) {
+    async setWeekDates(week) {
+        let dates = [];
+        let day = week;
+        dates.push(day.toJSON().slice(0, 10));
+        for (var i = 0; i < 6; i++) {
+            day = new Date(day.getTime() - 864e5);
+            dates.push(day.toJSON().slice(0, 10));
+        }
+        this.setState({ selectedWeekDatesStrings: dates })
+    }
+
+    delay = ms => new Promise(res => setTimeout(res, ms));
+
+    async getWeeklyMoodDetails(week) {
+
+        await this.setWeekDates(week);
+
         let user = firebase.auth().currentUser
-        let weekDays = week;
+        let weekDays = this.state.selectedWeekDatesStrings;
         let moodDays = [];
+        let moodByDays = [];
+        let daysOfWeek = [];
         weekDays.forEach(function (item) {
             db
                 .collection("users")
@@ -56,14 +53,20 @@ export default class MoodWeeklyView extends Component {
                 .doc(item)
                 .get()
                 .then(doc => {
+                    let date, dateString, mood, moodDetail, moodString;
+                    let object;
+
                     if (doc.exists) {
-                        let date = doc.data().selectedDate
-                        let mood = doc.data().selectedMood
-                        let moodDetail = doc.data().selectedMoodDetails
-                        let object = {
+                        date = doc.data().selectedDate
+                        dateString = item
+                        mood = doc.data().selectedMood
+                        moodString = doc.data().selectedMoodString
+                        moodDetail = doc.data().selectedMoodDetails
+                        object = {
                             date,
-                            item,
+                            dateString,
                             mood,
+                            moodString,
                             moodDetail
                         }
                         moodDays.push(object)
@@ -71,13 +74,16 @@ export default class MoodWeeklyView extends Component {
                             return a.date - b.date;
                         });
                     } else {
-                        let date = item
-                        let mood = -1
-                        let moodDetail = "no details"
-                        let object = {
+                        dateString = item
+                        date = new Date(item);
+                        mood = 0,
+                            moodString = "No mood recorded"
+                        moodDetail = ""
+                        object = {
                             date,
-                            item,
+                            dateString,
                             mood,
+                            moodString,
                             moodDetail
                         }
                         moodDays.push(object)
@@ -91,20 +97,22 @@ export default class MoodWeeklyView extends Component {
                     console.log("Error getting document:", error);
                 });
         })
-        this.setState({ weeklyStats: moodDays })
+        // needs to wait on promise results
 
+        await this.delay(500);
+        moodDays.forEach(function (item) {
+            var options = { weekday: 'long' };
+            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(item.date).slice(0, 3));
+            moodByDays.push(item.mood);
+        })
 
-    }
-
-    setWeekDates(week) {
-        let dates = [];
-        let day = week;
-        dates.push(day.toJSON().slice(0, 10));
-        for (var i = 0; i < 6; i++) {
-            day = new Date(day.getTime() - 864e5);
-            dates.push(day.toJSON().slice(0, 10));
-        }
-        this.setState({ selectedWeekDatesStrings: dates })
+        await this.delay(500);
+        this.setState({
+            weeklyStats: moodDays,
+            isLoading: false,
+            moodByDays: moodByDays,
+            daysOfWeek: daysOfWeek
+        })
     }
 
     setPreviousWeek() {
@@ -125,33 +133,113 @@ export default class MoodWeeklyView extends Component {
     }
 
     componentWillMount() {
-        this.setWeekDates(this.state.selectedWeek);
-        this.getWeeklyMoodDetails(this.state.selectedWeekDatesStrings)
+        this.getWeeklyMoodDetails(this.state.selectedWeek)
     }
 
     render() {
-        return (
-                <LineChart style={{ flex: 1 }} config={config} data={data} />
-        )
+        const weeklyView = this.state.weeklyStats.map(item => {
+            return (
+                <View style={styles.row} key={item.dateString}>
+                    <Text style={styles.dateString}>
+                        {item.dateString}
+                    </Text>
+                    <View style={styles.moodDetails}>
+                        <MoodIcon offset={item.mood} style={styles.icon}/>
+                        <View  style={styles.moodTextDetail}>
+                            <Text style={styles.rowText}>
+                                Feeling {item.moodString}
+                            </Text>
+                            <Text style={styles.rowText}>
+                                {item.moodDetail}
+                            </Text>
+                        </View>
+
+                    </View>
+                </View>
+            );
+        })
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            )
+        }
+        else {
+            return (
+                <ScrollView style={styles.container}>
+                    <LineChart
+                        data={{
+                            labels: this.state.daysOfWeek,
+                            datasets: [{
+                                data: this.state.moodByDays
+                            }]
+                        }}
+                        width={Dimensions.get('window').width} // from react-native
+                        height={220}
+                        withInnerLines={false}
+                        chartConfig={{
+                            backgroundColor: '#e26a00',
+                            backgroundGradientFrom: '#fb8c00',
+                            backgroundGradientTo: '#ffa726',
+                            decimalPlaces: 2,
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16
+                            }
+                        }}
+                        bezier
+                        style={{
+                            marginVertical: 8,
+                            borderRadius: 16
+                        }}
+                    />
+                    {weeklyView}
+                </ScrollView>
+            )
+        }
     }
 }
 
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    }, scrollContainer: {
-        flex: 1,
-        backgroundColor: 'steelblue'
+        backgroundColor: '#efeff4'
     },
-    container2: {
+    loading: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    },
+    dateString: {
+        fontSize: 10,
+        fontStyle: 'italic',
+        color: 'lightslategrey',
+        paddingLeft: 4,
+    },
+    moodDetails: {
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        backgroundColor: 'steelblue',
-        paddingLeft: 3,
-        paddingVertical: 2
+        height: 55,
+        backgroundColor: '#ffffff',
+        marginVertical: 1,
+    },
+    icon: {
+        justifyContent: 'center', 
+    },
+    moodTextDetail: {
+        paddingLeft: 10
+    },
+    row: {
+        marginVertical: 0,
+    },
+    rowText: {
+        fontSize: 14,
+        color: '#333333',
+        paddingLeft: 10,
+        textAlignVertical: 'center'
     },
 
 })

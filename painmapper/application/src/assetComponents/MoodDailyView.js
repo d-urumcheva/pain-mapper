@@ -13,6 +13,7 @@ export default class MoodDailyView extends Component {
       selectedDateString: new Date().toJSON().slice(0, 10),
       selectedDate: new Date(),
       selectedMood: 720,
+      selectedMoodString: "",
       selectedMoodDetails: "",
     }
     this.getMoodDetails(this.state.selectedDateString);
@@ -28,6 +29,7 @@ export default class MoodDailyView extends Component {
       .set({
         selectedDate: this.state.selectedDate,
         selectedMood: this.state.selectedMood,
+        selectedMoodString: this.state.selectedMoodString,
         selectedMoodDetails: this.state.selectedMoodDetails
       })
       .then(() => {
@@ -82,6 +84,19 @@ export default class MoodDailyView extends Component {
     this.getMoodDetails(nextDayString)
   }
 
+  setMoodString(e) {
+    let moodString = '';
+    if (e.nativeEvent.contentOffset.x == 0) moodString = 'Very bad'
+    else if (e.nativeEvent.contentOffset.x == 360) moodString = 'Bad'
+    else if (e.nativeEvent.contentOffset.x == 720) moodString = 'Okay'
+    else if (e.nativeEvent.contentOffset.x == 1080) moodString = 'Good'
+    else if (e.nativeEvent.contentOffset.x == 1440) moodString='Excellent'
+    this.setState({ 
+      selectedMood: e.nativeEvent.contentOffset.x, 
+      selectedMoodString: moodString
+    })
+  }
+
   render() {
     today = new Date().toJSON().slice(0, 10);
     if (this.state.selectedDateString == today) {
@@ -90,7 +105,7 @@ export default class MoodDailyView extends Component {
           <ScrollView ref='scrollView'
             horizontal={true}
             pagingEnabled={true}
-            onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
+            onMomentumScrollEnd={e => this.setMoodString(e)}>
             <View style={styles.mood1}>
               <Image style={styles.icon}
                 source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
@@ -144,7 +159,7 @@ export default class MoodDailyView extends Component {
             horizontal={true}
             pagingEnabled={true}
             contentOffset={{ x: this.state.selectedMood }}
-            onMomentumScrollEnd={e => this.setState({ selectedMood: e.nativeEvent.contentOffset.x })}>
+            onMomentumScrollEnd={e => this.setMoodString(e)}>
             <View style={styles.mood1}>
               <Image style={styles.icon}
                 source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
