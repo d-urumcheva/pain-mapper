@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
 import MoodIcon from '../components/MoodIcon';
 
@@ -29,12 +28,10 @@ export default class MoodWeeklyView extends Component {
         dates.push(day.toJSON().slice(0, 10));
         for (var i = 0; i < 6; i++) {
             day = new Date(day.getTime() - 864e5);
-            dates.push(day.toJSON().slice(0, 10));
+            dates.unshift(day.toJSON().slice(0, 10));
         }
         this.setState({ selectedWeekDatesStrings: dates })
     }
-
-    delay = ms => new Promise(res => setTimeout(res, ms));
 
     async getWeeklyMoodDetails(week) {
 
@@ -45,15 +42,16 @@ export default class MoodWeeklyView extends Component {
         let moodDays = [];
         let moodByDays = [];
         let daysOfWeek = [];
-        weekDays.forEach(function (item) {
-            db
+
+        let promises = weekDays.map(function (item) {
+            return db
                 .collection("users")
                 .doc(user.uid)
                 .collection("mood")
                 .doc(item)
                 .get()
                 .then(doc => {
-                    let date, dateString, mood, moodDetail, moodString;
+                    let date, dateString, mood, moodDetail, moodString, isMoodRecorded;
                     let object;
 
                     if (doc.exists) {
@@ -62,51 +60,45 @@ export default class MoodWeeklyView extends Component {
                         mood = doc.data().selectedMood
                         moodString = doc.data().selectedMoodString
                         moodDetail = doc.data().selectedMoodDetails
+                        isMoodRecorded = true
                         object = {
                             date,
                             dateString,
                             mood,
                             moodString,
-                            moodDetail
+                            moodDetail, 
+                            isMoodRecorded
                         }
-                        moodDays.push(object)
-                        moodDays.sort(function (a, b) {
-                            return a.date - b.date;
-                        });
                     } else {
                         dateString = item
                         date = new Date(item);
                         mood = 0,
-                            moodString = "No mood recorded"
+                        moodString = "No mood recorded"
                         moodDetail = ""
+                        isMoodRecorded = false
                         object = {
                             date,
                             dateString,
                             mood,
                             moodString,
-                            moodDetail
+                            moodDetail,
+                            isMoodRecorded
                         }
-                        moodDays.push(object)
-                        moodDays.sort(function (a, b) {
-                            return a.date - b.date;
-                        });
                         console.log("No such document!");
                     }
+
+                    return object;
                 })
-                .catch(function (error) {
-                    console.log("Error getting document:", error);
-                });
         })
-        // needs to wait on promise results
 
-        await this.delay(500);
-        moodDays.forEach(function (item) {
+        moodDays = await Promise.all(promises);
+
+        for (let i = 0; i < moodDays.length; i++) {
             var options = { weekday: 'long' };
-            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(item.date).slice(0, 3));
-            moodByDays.push(item.mood);
-        })
+            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(moodDays[i].date).slice(0, 3));
+            moodByDays.push(moodDays[i].mood);
+        }
 
-        await this.delay(500);
         this.setState({
             weeklyStats: moodDays,
             isLoading: false,
@@ -138,25 +130,26 @@ export default class MoodWeeklyView extends Component {
 
     render() {
         const weeklyView = this.state.weeklyStats.map(item => {
-            return (
-                <View style={styles.row} key={item.dateString}>
-                    <Text style={styles.dateString}>
-                        {item.dateString}
-                    </Text>
-                    <View style={styles.moodDetails}>
-                        <MoodIcon offset={item.mood} style={styles.icon}/>
-                        <View  style={styles.moodTextDetail}>
-                            <Text style={styles.rowText}>
-                                Feeling {item.moodString}
-                            </Text>
-                            <Text style={styles.rowText}>
-                                {item.moodDetail}
-                            </Text>
+            if (item.isMoodRecorded) {
+                return (
+                    <View style={styles.row} key={item.dateString}>
+                        <Text style={styles.dateString}>
+                            {item.dateString}
+                        </Text>
+                        <View style={styles.moodDetails}>
+                            <MoodIcon offset={item.mood} style={styles.icon} />
+                            <View style={styles.moodTextDetail}>
+                                <Text style={styles.rowText}>
+                                    Feeling {item.moodString}
+                                </Text>
+                                <Text style={styles.rowText}>
+                                    {item.moodDetail}
+                                </Text>
+                            </View>
                         </View>
-
                     </View>
-                </View>
-            );
+                );
+            }
         })
 
         if (this.state.isLoading) {
@@ -169,6 +162,7 @@ export default class MoodWeeklyView extends Component {
         else {
             return (
                 <ScrollView style={styles.container}>
+                {console.log(this.state)}
                     <LineChart
                         data={{
                             labels: this.state.daysOfWeek,
@@ -177,7 +171,7 @@ export default class MoodWeeklyView extends Component {
                             }]
                         }}
                         width={Dimensions.get('window').width} // from react-native
-                        height={220}
+                        height={230}
                         withInnerLines={false}
                         chartConfig={{
                             backgroundColor: '#e26a00',
@@ -191,8 +185,7 @@ export default class MoodWeeklyView extends Component {
                         }}
                         bezier
                         style={{
-                            marginVertical: 8,
-                            borderRadius: 16
+                            marginBottom: 5
                         }}
                     />
                     {weeklyView}
@@ -227,7 +220,7 @@ const styles = StyleSheet.create({
         marginVertical: 1,
     },
     icon: {
-        justifyContent: 'center', 
+        justifyContent: 'center',
     },
     moodTextDetail: {
         paddingLeft: 10

@@ -18,40 +18,13 @@ class WeatherPage extends Component {
     this.setState({ selectedIndex })
   }
 
-  fetchView(index) {
-    if(index === 0) {
-      return <Text> This is daily view! </Text>
-    }
-    if(index === 1) {
-      return <Text> This is weekly view! </Text>
-    }
-    if(index === 2) {
-      return <Text> This is monthly view! </Text>
-    }
-  }
-
-  componentWillMount() {
-    let i = 0;
-    this.fetchView(i);
-  }
-
   render () {
-  const buttons = ['Daily', 'Weekly', 'Monthly']
-  const { selectedIndex } = this.state
 
   return (
     <View>
-      <View>
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={buttons}
-        />
-      </View>
-      <View>
-        {this.fetchView(selectedIndex)}
-      </View>
-
+      <Text style={{textAlign: 'center'}}>
+        Weather Page
+      </Text> 
     </View>
   )
 }

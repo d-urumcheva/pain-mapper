@@ -30,12 +30,10 @@ export default class MoodMonthlyView extends Component {
         dates.push(day.toJSON().slice(0, 10));
         for (var i = 1; i < numberOfDays; i++) {
             day = new Date(day.getTime() - 864e5);
-            dates.push(day.toJSON().slice(0, 10));
+            dates.unshift(day.toJSON().slice(0, 10));
         }
         this.setState({ selectedMonthDatesStrings: dates })
     }
-
-    delay = ms => new Promise(res => setTimeout(res, ms));
 
     async getMonthlyMoodDetails(month) {
 
@@ -46,15 +44,16 @@ export default class MoodMonthlyView extends Component {
         let moodDays = [];
         let moodByDays = [];
         let daysOfMonth = [];
-        monthDays.forEach(function (item) {
-            db
+
+        let promises = monthDays.map(function (item) {
+            return db
                 .collection("users")
                 .doc(user.uid)
                 .collection("mood")
                 .doc(item)
                 .get()
                 .then(doc => {
-                    let date, dateString, mood, moodDetail, moodString;
+                    let date, dateString, mood, moodDetail, moodString, isMoodRecorded;
                     let object;
 
                     if (doc.exists) {
@@ -63,51 +62,45 @@ export default class MoodMonthlyView extends Component {
                         mood = doc.data().selectedMood
                         moodString = doc.data().selectedMoodString
                         moodDetail = doc.data().selectedMoodDetails
+                        isMoodRecorded = true
                         object = {
                             date,
                             dateString,
                             mood,
                             moodString,
-                            moodDetail
+                            moodDetail,
+                            isMoodRecorded
                         }
-                        moodDays.push(object)
-                        moodDays.sort(function (a, b) {
-                            return a.date - b.date;
-                        });
                     } else {
                         dateString = item
                         date = new Date(item);
                         mood = 0,
                             moodString = "No mood recorded"
                         moodDetail = ""
+                        isMoodRecorded = false
                         object = {
                             date,
                             dateString,
                             mood,
                             moodString,
-                            moodDetail
+                            moodDetail,
+                            isMoodRecorded
                         }
-                        moodDays.push(object)
-                        moodDays.sort(function (a, b) {
-                            return a.date - b.date;
-                        });
                         console.log("No such document!");
                     }
+
+                    return object;
                 })
-                .catch(function (error) {
-                    console.log("Error getting document:", error);
-                });
         })
-        // needs to wait on promise results
 
-        await this.delay(500);
-        moodDays.forEach(function (item) {
+        moodDays = await Promise.all(promises);
+
+        for (let i = 0; i < moodDays.length; i++) {
             var options = { weekday: 'long' };
-            daysOfMonth.push(new Intl.DateTimeFormat('en-US', options).format(item.date).slice(0, 1));
-            moodByDays.push(item.mood);
-        })
+            daysOfMonth.push(new Intl.DateTimeFormat('en-US', options).format(moodDays[i].date).slice(0, 1));
+            moodByDays.push(moodDays[i].mood);
+        }
 
-        await this.delay(500);
         this.setState({
             monthlyStats: moodDays,
             isLoading: false,
@@ -139,25 +132,27 @@ export default class MoodMonthlyView extends Component {
 
     render() {
         const monthlyView = this.state.monthlyStats.map(item => {
-            return (
-                <View style={styles.row} key={item.dateString}>
-                    <Text style={styles.dateString}>
-                        {item.dateString}
-                    </Text>
-                    <View style={styles.moodDetails}>
-                        <MoodIcon offset={item.mood} style={styles.icon}/>
-                        <View  style={styles.moodTextDetail}>
-                            <Text style={styles.rowText}>
-                                {item.moodString}
-                            </Text>
-                            <Text style={styles.rowText}>
-                                {item.moodDetail}
-                            </Text>
-                        </View>
+            if (item.isMoodRecorded) {
+                return (
+                    <View style={styles.row} key={item.dateString}>
+                        <Text style={styles.dateString}>
+                            {item.dateString}
+                        </Text>
+                        <View style={styles.moodDetails}>
+                            <MoodIcon offset={item.mood} style={styles.icon} />
+                            <View style={styles.moodTextDetail}>
+                                <Text style={styles.rowText}>
+                                    {item.moodString}
+                                </Text>
+                                <Text style={styles.rowText}>
+                                    {item.moodDetail}
+                                </Text>
+                            </View>
 
+                        </View>
                     </View>
-                </View>
-            );
+                );
+            }
         })
 
         if (this.state.isLoading) {
@@ -178,7 +173,7 @@ export default class MoodMonthlyView extends Component {
                             }]
                         }}
                         width={Dimensions.get('window').width} // from react-native
-                        height={220}
+                        height={230}
                         withInnerLines={false}
                         chartConfig={{
                             backgroundColor: '#e26a00',
@@ -192,8 +187,7 @@ export default class MoodMonthlyView extends Component {
                         }}
                         bezier
                         style={{
-                            marginVertical: 8,
-                            borderRadius: 16
+                            marginBottom: 5
                         }}
                     />
                     {monthlyView}
@@ -228,7 +222,7 @@ const styles = StyleSheet.create({
         marginVertical: 1,
     },
     icon: {
-        justifyContent: 'center', 
+        justifyContent: 'center',
     },
     moodTextDetail: {
         paddingLeft: 10
