@@ -1,0 +1,338 @@
+import React, { Component } from 'react';
+import { StyleSheet, View, Text, TextInput, ImageBackground, Dimensions, TouchableOpacity } from 'react-native';
+import { AirbnbRating } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/AntDesign'
+import firebase from 'react-native-firebase'
+
+var db = firebase.firestore();
+
+export default class SleepDailyView extends Component {
+
+  constructor() {
+    super()
+    this.state = {
+      selectedDateString: new Date().toJSON().slice(0, 10),
+      selectedDate: new Date(),
+      sleepDuration: "",
+      sleepQuality: 0,
+      sleepDetails: ""
+    }
+    this.getSleepDetails(this.state.selectedDateString);
+  }
+
+  updateSleepDetails() {
+    let user = firebase.auth().currentUser
+    db
+      .collection("users")
+      .doc(user.uid)
+      .collection("sleep")
+      .doc(this.state.selectedDateString)
+      .set({
+        selectedDate: this.state.selectedDate,
+        sleepDuration: this.state.sleepDuration,
+        sleepQuality: this.state.sleepQuality,
+        sleepDetails: this.state.sleepDetails
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.log("Error writing document: ", error);
+      });
+  }
+
+  getSleepDetails(date) {
+    let user = firebase.auth().currentUser
+    db
+      .collection("users")
+      .doc(user.uid)
+      .collection("sleep")
+      .doc(date)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          this.setState({
+            sleepDuration: doc.data().sleepDuration,
+            sleepQuality: doc.data().sleepQuality,
+            sleepDetails: doc.data().sleepDetails
+          })
+        } else {
+          this.setState({
+            sleepDuration: 0,
+            sleepQuality: 0,
+            sleepDetails: ""
+          })
+          console.log("No such document!");
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+  }
+
+  setPreviousDay() {
+    var prevDay = new Date(this.state.selectedDate.getTime() - 864e5);
+    this.setState({ selectedDate: prevDay })
+    var prevDayString = prevDay.toJSON().slice(0, 10);
+    this.setState({ selectedDateString: prevDayString });
+    this.getSleepDetails(prevDayString)
+  }
+
+  setNextDay() {
+    var nextDay = new Date(this.state.selectedDate.getTime() + 864e5);
+    this.setState({ selectedDate: nextDay })
+    var nextDayString = nextDay.toJSON().slice(0, 10);
+    this.setState({ selectedDateString: nextDayString });
+    this.getSleepDetails(nextDayString)
+  }
+
+  render() {
+    today = new Date().toJSON().slice(0, 10);
+    if (this.state.selectedDateString == today) {
+      return (
+        <ImageBackground
+          source={{ uri: 'https://www.desktopbackground.org/download/720x1280/2010/05/08/14235_starry-night-sky-tumblr-wallpaper_1678x1302_h.jpg' }}
+          style={styles.container} >
+          <View style={styles.dateNavigatorShort}>
+            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+            <Text style={styles.dateText}> Today </Text>
+          </View>
+          <Text style={styles.infoText}>
+            Let us know how you slept last night!
+              </Text>
+          <TextInput style={styles.inputSleep}
+            placeholder={'How long did you sleep?'} placeholderTextColor={"black"}
+            fontStyle={this.state.sleepDuration.length == 0 ? 'italic' : 'normal'}
+            textAlignVertical={'top'}
+            blurOnSubmit={true}
+            onChangeText={(text) => this.setState({ sleepDuration: text })}
+            value={`${this.state.sleepDuration}`}
+          />
+          <Text style={styles.qualityText}>
+            Quality:
+            </Text>
+          <View style={styles.inputSleepQuality}>
+            <AirbnbRating
+              count={5}
+              defaultRating={this.state.sleepQuality}
+              showRating={false}
+              size={20}
+              onFinishRating={(number) => this.setState({ sleepQuality: number })} />
+          </View>
+          <TextInput style={styles.inputSleepDetail}
+            placeholder={'Tell us more'} placeholderTextColor={"black"}
+            fontStyle={this.state.sleepDetails.length == 0 ? 'italic' : 'normal'}
+            textAlignVertical={'top'}
+            blurOnSubmit={true}
+            onChangeText={(text) => this.setState({ sleepDetails: text })}
+            value={this.state.sleepDetails}
+          />
+          <TouchableOpacity style={styles.button}
+            onPress={() => this.updateSleepDetails()}>
+            <Text style={styles.buttonText}>
+              Update
+            </Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      );
+    }
+    else {
+      return (
+        <ImageBackground
+          source={{ uri: 'https://www.desktopbackground.org/download/720x1280/2010/05/08/14235_starry-night-sky-tumblr-wallpaper_1678x1302_h.jpg' }}
+          style={styles.container}>
+          <View style={styles.dateNavigatorLong}>
+            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+            <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
+            <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
+          </View>
+          <Text style={styles.infoText}>
+            Let us know how you slept last night!
+              </Text>
+          <TextInput style={styles.inputSleep}
+            placeholder={'How long did you sleep?'} placeholderTextColor={"black"}
+            fontStyle={this.state.sleepDuration.length == 0 ? 'italic' : 'normal'}
+            textAlignVertical={'top'}
+            blurOnSubmit={true}
+            onChangeText={(text) => this.setState({ sleepDuration: text })}
+            value={`${this.state.sleepDuration}`}
+          />
+          <Text style={styles.qualityText}>
+            Quality:
+            </Text>
+          <View style={styles.inputSleepQuality}>
+            <AirbnbRating
+              count={5}
+              defaultRating={this.state.sleepQuality}
+              showRating={false}
+              size={20}
+              onFinishRating={(number) => this.setState({ sleepQuality: number })} />
+          </View>
+          <TextInput style={styles.inputSleepDetail}
+            placeholder={'Tell us more'} placeholderTextColor={"black"}
+            fontStyle={this.state.sleepDetails.length == 0 ? 'italic' : 'normal'}
+            textAlignVertical={'top'}
+            blurOnSubmit={true}
+            onChangeText={(text) => this.setState({ sleepDetails: text })}
+            value={this.state.sleepDetails}
+          />
+          <TouchableOpacity style={styles.button}
+            onPress={() => this.updateSleepDetails()}>
+            <Text style={styles.buttonText}>
+              Update
+            </Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      );
+    }
+  };
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateNavigatorShort: {
+    position: 'absolute',
+    top: 20,
+    left: 110,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10
+  },
+  dateNavigatorLong: {
+    position: 'absolute',
+    top: 20,
+    left: 85,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10
+  },
+  dateText: {
+    fontSize: 25,
+    paddingHorizontal: 10,
+    color: 'white'
+  },
+  infoText: {
+    position: 'absolute',
+    top: 150,
+    left: 60,
+    color: 'white',
+    fontSize: 16,
+    paddingTop: 100,
+    fontStyle: 'italic'
+  },
+  qualityText: {
+    color: 'white',
+    fontSize: 16,
+    opacity: 0.2,
+    fontStyle: 'italic',
+    position: 'absolute',
+    top: 335,
+    left: 40,
+    paddingTop: 12,
+    paddingLeft: 10,
+  },
+  inputSleep: {
+    position: 'absolute',
+    top: 300,
+    left: 40,
+    backgroundColor: 'white',
+    opacity: 0.2,
+    height: 40,
+    width: 280,
+    borderRadius: 15,
+    fontSize: 15,
+    padding: 10,
+  },
+  inputSleepQuality: {
+    position: 'absolute',
+    top: 335,
+    left: 120,
+    fontSize: 15,
+    padding: 10,
+  },
+  inputSleepDetail: {
+    position: 'absolute',
+    top: 375,
+    left: 40,
+    backgroundColor: 'white',
+    opacity: 0.2,
+    height: 100,
+    width: 280,
+    borderRadius: 15,
+    fontSize: 15,
+    padding: 10,
+  },
+  button: {
+    position: 'absolute',
+    bottom: 10,
+    width: 100,
+    height: 35,
+    backgroundColor: 'white',
+    opacity: 0.5,
+    borderRadius: 25,
+    alignItems: 'center',
+    textAlign: 'center',
+    paddingVertical: 7,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#ffffff',
+    textAlign: 'center',
+    textAlignVertical: 'center'
+  },
+
+  mood1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#7d56c0',
+    width: Dimensions.get('window').width,
+
+  },
+  mood2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#5b6abe',
+    width: Dimensions.get('window').width,
+
+  },
+  mood3: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00bbd2',
+    width: Dimensions.get('window').width,
+
+  },
+  mood4: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#9bca64',
+    width: Dimensions.get('window').width,
+
+  },
+  mood5: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#4bae4f',
+    width: Dimensions.get('window').width,
+  },
+  icon: {
+    position: 'absolute',
+    top: 10,
+    left: -4,
+    opacity: 0.4,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width,
+  },
+})

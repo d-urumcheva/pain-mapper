@@ -1,89 +1,88 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import { Rating } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
 import firebase from 'react-native-firebase'
-import MoodIcon from '../components/MoodIcon'
 
 var db = firebase.firestore();
 
-export default class MoodMonthlyView extends Component {
+export default class SleepWeeklyView extends Component {
 
     constructor() {
         super()
         this.state = {
-            selectedMonth: new Date(),
-            selectedMonthDatesStrings: [],
-            monthlyStats: [],
+            selectedWeek: new Date(),
+            selectedWeekDatesStrings: [],
+            weeklyStats: [],
             isLoading: true,
-            moodByDays: [],
-            daysOfMonth: []
+            sleepByDays: [],
+            daysOfWeek: []
         };
 
-        this.getMonthlyMoodDetails = this.getMonthlyMoodDetails.bind(this);
+        this.getWeeklySleepDetails = this.getWeeklySleepDetails.bind(this);
     }
 
-    async setMonthDates(month) {
+    async setWeekDates(week) {
         let dates = [];
-        let day = month;
-        let numberOfDays = day.toJSON().slice(8, 10)
+        let day = week;
         dates.push(day.toJSON().slice(0, 10));
-        for (var i = 1; i < numberOfDays; i++) {
+        for (var i = 0; i < 6; i++) {
             day = new Date(day.getTime() - 864e5);
             dates.unshift(day.toJSON().slice(0, 10));
         }
-        this.setState({ selectedMonthDatesStrings: dates })
+        this.setState({ selectedWeekDatesStrings: dates })
     }
 
-    async getMonthlyMoodDetails(month) {
+    async getWeeklySleepDetails(week) {
 
-        await this.setMonthDates(month);
+        await this.setWeekDates(week);
 
         let user = firebase.auth().currentUser
-        let monthDays = this.state.selectedMonthDatesStrings;
-        let moodDays = [];
-        let moodByDays = [];
-        let daysOfMonth = [];
+        let weekDays = this.state.selectedWeekDatesStrings;
+        let weeklyStats = [];
+        let sleepByDays = [];
+        let daysOfWeek = [];
 
-        let promises = monthDays.map(function (item) {
+        let promises = weekDays.map(function (item) {
             return db
                 .collection("users")
                 .doc(user.uid)
-                .collection("mood")
+                .collection("sleep")
                 .doc(item)
                 .get()
                 .then(doc => {
-                    let date, dateString, mood, moodDetail, moodString, isMoodRecorded;
+                    let date, dateString, sleepDuration, sleepQuality, sleepDetails, isSleepRecorded;
                     let object;
 
                     if (doc.exists) {
                         date = doc.data().selectedDate
                         dateString = item
-                        mood = doc.data().selectedMood
-                        moodString = doc.data().selectedMoodString
-                        moodDetail = doc.data().selectedMoodDetails
-                        isMoodRecorded = true
+                        sleepDuration = doc.data().sleepDuration
+                        sleepQuality = doc.data().sleepQuality
+                        sleepDetails = doc.data().sleepDetails
+                        isSleepRecorded = true
                         object = {
                             date,
                             dateString,
-                            mood,
-                            moodString,
-                            moodDetail,
-                            isMoodRecorded
+                            sleepDuration,
+                            sleepQuality,
+                            sleepDetails,
+                            isSleepRecorded
                         }
                     } else {
                         dateString = item
                         date = new Date(item);
-                        mood = 0,
-                            moodString = "No mood recorded"
-                        moodDetail = ""
-                        isMoodRecorded = false
+                        sleepDuration = 0
+                        sleepQuality = 0
+                        sleepDetails = ""
+                        isSleepRecorded = false
                         object = {
                             date,
                             dateString,
-                            mood,
-                            moodString,
-                            moodDetail,
-                            isMoodRecorded
+                            sleepDuration,
+                            sleepQuality,
+                            sleepDetails,
+                            isSleepRecorded
                         }
                         console.log("No such document!");
                     }
@@ -92,59 +91,63 @@ export default class MoodMonthlyView extends Component {
                 })
         })
 
-        moodDays = await Promise.all(promises);
+        weeklyStats = await Promise.all(promises);
 
-        for (let i = 0; i < moodDays.length; i++) {
+        for (let i = 0; i < weeklyStats.length; i++) {
             var options = { weekday: 'long' };
-            daysOfMonth.push(new Intl.DateTimeFormat('en-US', options).format(moodDays[i].date).slice(0, 1));
-            moodByDays.push(moodDays[i].mood);
+            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(weeklyStats[i].date).slice(0, 3));
+            sleepByDays.push(weeklyStats[i].sleepDuration);
         }
 
         this.setState({
-            monthlyStats: moodDays,
+            weeklyStats: weeklyStats,
             isLoading: false,
-            moodByDays: moodByDays,
-            daysOfMonth: daysOfMonth
+            sleepByDays: sleepByDays,
+            daysOfWeek: daysOfWeek
         })
     }
 
-    setPreviousMonth() {
-        var prevMonth = new Date(this.state.selectedDate.getTime() - 7 * 864e5);
-        this.setState({ selectedMonth: prevMonth })
-        var prevMonthString = prevMonth.toJSON().slice(0, 10);
-        this.setState({ selectedMonthString: prevMonthString });
+    setPreviousWeek() {
+        var prevWeek = new Date(this.state.selectedDate.getTime() - 7 * 864e5);
+        this.setState({ selectedWeek: prevWeek })
+        var prevWeekString = prevWeek.toJSON().slice(0, 10);
+        this.setState({ selectedWeekString: prevWeekString });
     }
 
-    setNextMonth() {
-        var nextMonth = new Date(this.state.selectedDate.getTime() + 7 * 864e5);
-        this.setState({ selectedMonth: nextMonth })
-        var nextMonthString = nextMonth.toJSON().slice(0, 10);
-        this.setState({ selectedMonthString: nextMonthString });
+    setNextWeek() {
+        var nextWeek = new Date(this.state.selectedDate.getTime() + 7 * 864e5);
+        this.setState({ selectedWeek: nextWeek })
+        var nextWeekString = nextWeek.toJSON().slice(0, 10);
+        this.setState({ selectedWeekString: nextWeekString });
     }
 
     componentWillMount() {
-        this.getMonthlyMoodDetails(this.state.selectedMonth)
+        this.getWeeklySleepDetails(this.state.selectedWeek)
     }
 
     render() {
-        const monthlyView = this.state.monthlyStats.map(item => {
-            if (item.isMoodRecorded) {
+        const weeklyView = this.state.weeklyStats.map(item => {
+            if (item.isSleepRecorded) {
                 return (
                     <View style={styles.row} key={item.dateString}>
                         <Text style={styles.dateString}>
                             {item.dateString}
                         </Text>
-                        <View style={styles.moodDetails}>
-                            <MoodIcon offset={item.mood} style={styles.icon} />
-                            <View style={styles.moodTextDetail}>
+                        <View style={styles.sleepDetails}>
+                            <View style={styles.sleepTextDetail}>
                                 <Text style={styles.rowText}>
-                                    {item.moodString}
-                                </Text>
+                                    {item.sleepDuration} hours,
+                                    </Text>
+                                <Rating
+                                    readonly
+                                    count={5}
+                                    startingValue={item.sleepQuality}
+                                    showRating={false}
+                                    imageSize={10} />
                                 <Text style={styles.rowText}>
-                                    {item.moodDetail}
+                                    {item.sleepDetails}
                                 </Text>
                             </View>
-
                         </View>
                     </View>
                 );
@@ -161,20 +164,21 @@ export default class MoodMonthlyView extends Component {
         else {
             return (
                 <ScrollView style={styles.container}>
+                    {console.log(this.state)}
                     <LineChart
                         data={{
-                            labels: this.state.daysOfMonth,
+                            labels: this.state.daysOfWeek,
                             datasets: [{
-                                data: this.state.moodByDays
+                                data: this.state.sleepByDays
                             }]
                         }}
                         width={Dimensions.get('window').width} // from react-native
                         height={230}
                         withInnerLines={false}
                         chartConfig={{
-                            backgroundColor: '#e26a00',
-                            backgroundGradientFrom: '#fb8c00',
-                            backgroundGradientTo: '#ffa726',
+                            backgroundColor: '#121236',
+                            backgroundGradientFrom: '#030210',
+                            backgroundGradientTo: '#403361',
                             decimalPlaces: 2,
                             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                             style: {
@@ -186,7 +190,7 @@ export default class MoodMonthlyView extends Component {
                             marginBottom: 5
                         }}
                     />
-                    {monthlyView}
+                    {weeklyView}
                 </ScrollView>
             )
         }
@@ -209,7 +213,7 @@ const styles = StyleSheet.create({
         color: 'lightslategrey',
         paddingLeft: 4,
     },
-    moodDetails: {
+    sleepDetails: {
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -220,8 +224,12 @@ const styles = StyleSheet.create({
     icon: {
         justifyContent: 'center',
     },
-    moodTextDetail: {
+    sleepTextDetail: {
         paddingLeft: 10
+    },
+    sleepDuarationQuality: {
+        flexDirection: 'row',
+
     },
     row: {
         marginVertical: 0,
@@ -230,6 +238,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#333333',
         paddingLeft: 10,
+        marginRight: 5,
         textAlignVertical: 'center'
     },
+
 })

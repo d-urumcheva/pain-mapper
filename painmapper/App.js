@@ -18,11 +18,14 @@ import SettingsPage from './application/src/pages/SettingsPage';
 import PersonalDetailsPage from './application/src/pages/PersonalDetailsPage';
 import AssetsPage from './application/src/pages/AssetsPage';
 import LoadingPage from './application/src/pages/LoadingPage';
-import SleepPage from './application/src/assetPages/SleepPage';
 import WeatherPage from './application/src/assetPages/WeatherPage';
 import MoodDailyView from './application/src/assetComponents/MoodDailyView';
 import MoodWeeklyView from './application/src/assetComponents/MoodWeeklyView';
 import MoodMonthlyView from './application/src/assetComponents/MoodMonthlyView';
+// import SleepGoalView from './application/src/assetComponents/SleepGoalView';
+import SleepDailyView from './application/src/assetComponents/SleepDailyView';
+import SleepWeeklyView from './application/src/assetComponents/SleepWeeklyView';
+import SleepMonthlyView from './application/src/assetComponents/SleepMonthlyView';
 
 class App extends Component {
   render() {
@@ -81,11 +84,51 @@ const LoginStackNavigator = createStackNavigator(
     }, 
     {
       swipeEnabled: false
-    }
+    }, 
   )
 
   MoodTabNavigator.navigationOptions = {
     header: null,
+  };
+
+
+  const SleepTabNavigator = createMaterialTopTabNavigator(
+    {
+      // Goals: {
+      //   screen: SleepGoalView,
+      //   navigationOptions: {
+      //     header: null, 
+      //   }
+      // }, 
+      Daily: {
+        screen: SleepDailyView, 
+        navigationOptions: {
+          header: null, 
+        }
+      },
+      Weekly: {
+        screen: SleepWeeklyView, 
+        navigationOptions: {
+          header: null, 
+        }
+      },
+      Monthly: {
+        screen: SleepMonthlyView, 
+        navigationOptions: {
+          header: null, 
+        }
+      }
+    }, 
+    {
+      swipeEnabled: false
+    }
+  )
+
+  SleepTabNavigator.navigationOptions = {
+    header: null,
+    headerStyle: {
+      backgroundColor: 'steelblue'
+    }
   };
 
 const HomeStackNavigator = createStackNavigator(
@@ -94,7 +137,9 @@ const HomeStackNavigator = createStackNavigator(
   MoodPage: {
     screen: MoodTabNavigator
   }, 
-  SleepPage: SleepPage, 
+  SleepPage: {
+    screen: SleepTabNavigator
+  },
   WeatherPage: WeatherPage
   }, 
   {
@@ -130,6 +175,9 @@ const DashboardTabNavigator = createBottomTabNavigator(
   {
     navigationOptions: {
       header: null,
+      headerStyle: {
+        backgroundColor: 'steelblue'
+      }
     }
   }
 )
