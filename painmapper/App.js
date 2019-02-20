@@ -22,7 +22,7 @@ import WeatherPage from './application/src/assetPages/WeatherPage';
 import MoodDailyView from './application/src/assetComponents/MoodDailyView';
 import MoodWeeklyView from './application/src/assetComponents/MoodWeeklyView';
 import MoodMonthlyView from './application/src/assetComponents/MoodMonthlyView';
-// import SleepGoalView from './application/src/assetComponents/SleepGoalView';
+import SleepGoalView from './application/src/assetComponents/SleepGoalView';
 import SleepDailyView from './application/src/assetComponents/SleepDailyView';
 import SleepWeeklyView from './application/src/assetComponents/SleepWeeklyView';
 import SleepMonthlyView from './application/src/assetComponents/SleepMonthlyView';
@@ -94,12 +94,10 @@ const LoginStackNavigator = createStackNavigator(
 
   const SleepTabNavigator = createMaterialTopTabNavigator(
     {
-      // Goals: {
-      //   screen: SleepGoalView,
-      //   navigationOptions: {
-      //     header: null, 
-      //   }
-      // }, 
+      Goals: {
+        screen: SleepGoalView,
+
+      }, 
       Daily: {
         screen: SleepDailyView, 
         navigationOptions: {

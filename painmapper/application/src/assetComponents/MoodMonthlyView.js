@@ -90,6 +90,9 @@ export default class MoodMonthlyView extends Component {
 
                     return object;
                 })
+                .catch(function (error) {
+                    console.log("Error getting document:", error);
+                });
         })
 
         moodDays = await Promise.all(promises);

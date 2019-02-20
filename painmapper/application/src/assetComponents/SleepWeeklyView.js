@@ -43,7 +43,7 @@ export default class SleepWeeklyView extends Component {
         let sleepByDays = [];
         let daysOfWeek = [];
 
-        let promises = weekDays.map(function (item) {
+        let promises = weekDays.map( (item) => {
             return db
                 .collection("users")
                 .doc(user.uid)
@@ -89,6 +89,9 @@ export default class SleepWeeklyView extends Component {
 
                     return object;
                 })
+                .catch( (error) => {
+                    console.log("Error getting document:", error);
+                });
         })
 
         weeklyStats = await Promise.all(promises);

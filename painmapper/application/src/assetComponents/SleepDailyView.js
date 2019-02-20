@@ -91,7 +91,7 @@ export default class SleepDailyView extends Component {
     if (this.state.selectedDateString == today) {
       return (
         <ImageBackground
-          source={{ uri: 'https://www.desktopbackground.org/download/720x1280/2010/05/08/14235_starry-night-sky-tumblr-wallpaper_1678x1302_h.jpg' }}
+        source={require('../../images/sleepBackground.jpg')}
           style={styles.container} >
           <View style={styles.dateNavigatorShort}>
             <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
@@ -139,7 +139,7 @@ export default class SleepDailyView extends Component {
     else {
       return (
         <ImageBackground
-          source={{ uri: 'https://www.desktopbackground.org/download/720x1280/2010/05/08/14235_starry-night-sky-tumblr-wallpaper_1678x1302_h.jpg' }}
+        source={require('../../images/sleepBackground.jpg')}
           style={styles.container}>
           <View style={styles.dateNavigatorLong}>
             <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />

@@ -90,9 +90,9 @@ export default class MoodDailyView extends Component {
     else if (e.nativeEvent.contentOffset.x == 360) moodString = 'Bad'
     else if (e.nativeEvent.contentOffset.x == 720) moodString = 'Okay'
     else if (e.nativeEvent.contentOffset.x == 1080) moodString = 'Good'
-    else if (e.nativeEvent.contentOffset.x == 1440) moodString='Excellent'
-    this.setState({ 
-      selectedMood: e.nativeEvent.contentOffset.x, 
+    else if (e.nativeEvent.contentOffset.x == 1440) moodString = 'Excellent'
+    this.setState({
+      selectedMood: e.nativeEvent.contentOffset.x,
       selectedMoodString: moodString
     })
   }

@@ -66,14 +66,14 @@ export default class MoodWeeklyView extends Component {
                             dateString,
                             mood,
                             moodString,
-                            moodDetail, 
+                            moodDetail,
                             isMoodRecorded
                         }
                     } else {
                         dateString = item
                         date = new Date(item);
                         mood = 0,
-                        moodString = "No mood recorded"
+                            moodString = "No mood recorded"
                         moodDetail = ""
                         isMoodRecorded = false
                         object = {
@@ -89,6 +89,9 @@ export default class MoodWeeklyView extends Component {
 
                     return object;
                 })
+                .catch(function (error) {
+                    console.log("Error getting document:", error);
+                });
         })
 
         moodDays = await Promise.all(promises);
@@ -162,7 +165,7 @@ export default class MoodWeeklyView extends Component {
         else {
             return (
                 <ScrollView style={styles.container}>
-                {console.log(this.state)}
+                    {console.log(this.state)}
                     <LineChart
                         data={{
                             labels: this.state.daysOfWeek,

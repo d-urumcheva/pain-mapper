@@ -42,9 +42,9 @@ export default class SleepMonthlyView extends Component {
         let monthDays = this.state.selectedMonthDatesStrings;
         let monthlyStats = [];
         let sleepByDays = [];
-        let daysOfMonth= [];
+        let daysOfMonth = [];
 
-        let promises = monthDays.map(function (item) {
+        let promises = monthDays.map( (item) => {
             return db
                 .collection("users")
                 .doc(user.uid)
@@ -90,6 +90,9 @@ export default class SleepMonthlyView extends Component {
 
                     return object;
                 })
+                .catch( (error) => {
+                    console.log("Error getting document:", error);
+                });
         })
 
         monthlyStats = await Promise.all(promises);
