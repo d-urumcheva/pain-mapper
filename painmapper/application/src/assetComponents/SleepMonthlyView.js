@@ -148,15 +148,16 @@ export default class SleepMonthlyView extends Component {
                                     startingValue={item.sleepQuality}
                                     showRating={false}
                                     imageSize={10} />
+                            </View>
                                 <Text style={styles.rowText}>
                                     {item.sleepDetails}
                                 </Text>
                             </View>
-                        </View>
                     </View>
                 );
             }
         })
+
 
         if (this.state.isLoading) {
             return (
@@ -221,7 +222,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        height: 55,
         backgroundColor: '#ffffff',
         marginVertical: 1,
     },
@@ -229,11 +229,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     sleepTextDetail: {
-        paddingLeft: 10
-    },
-    sleepDuarationQuality: {
-        flexDirection: 'row',
-
+        width: 90,
+        paddingHorizontal: 5,
+        paddingVertical: 10,
+        alignItems: 'center'
     },
     row: {
         marginVertical: 0,
