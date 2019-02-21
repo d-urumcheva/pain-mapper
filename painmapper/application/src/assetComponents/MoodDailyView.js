@@ -99,115 +99,67 @@ export default class MoodDailyView extends Component {
 
   render() {
     today = new Date().toJSON().slice(0, 10);
-    if (this.state.selectedDateString == today) {
-      return (
-        <View style={styles.container}>
-          <ScrollView ref='scrollView'
-            horizontal={true}
-            pagingEnabled={true}
-            onMomentumScrollEnd={e => this.setMoodString(e)}>
-            <View style={styles.mood1}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
-            </View>
-            <View style={styles.mood2}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/7dsJ98d.png' }} />
-            </View>
-            <View style={styles.mood3}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/lnQtHny.png' }} />
-            </View>
-            <View style={styles.mood4}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/LvyQeZi.png' }} />
-            </View>
-            <View style={styles.mood5}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/ZRoBJVy.png' }} />
-            </View>
-          </ScrollView>
-          <View style={styles.dateNavigatorShort}>
-            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-            <Text style={styles.dateText}> Today </Text>
+    return (
+      <View style={styles.container}>
+        <ScrollView ref='scrollView'
+          horizontal={true}
+          pagingEnabled={true}
+          onMomentumScrollEnd={e => this.setMoodString(e)}>
+          <View style={styles.mood1}>
+            <Image style={styles.icon}
+              source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
           </View>
-          <Text style={styles.infoText}>
-            Swipe left or right to select your mood
-              </Text>
-          <TextInput style={styles.inputTextBox}
-            placeholder={'Tell us more about yourself today'} placeholderTextColor={"black"}
-            fontStyle={this.state.selectedMoodDetails.length == 0 ? 'italic' : 'normal'}
-            multiline={true}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ selectedMoodDetails: text })}
-            value={this.state.selectedMoodDetails}
-          />
-          <TouchableOpacity style={styles.button}
-            onPress={() => this.updateMoodDetails()}>
-            <Text style={styles.buttonText}>
-              Update
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    else {
-      return (
-        <View style={styles.container}>
-          <ScrollView ref='scrollView'
-            horizontal={true}
-            pagingEnabled={true}
-            contentOffset={{ x: this.state.selectedMood }}
-            onMomentumScrollEnd={e => this.setMoodString(e)}>
-            <View style={styles.mood1}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/J1Jck4n.png' }} />
-            </View>
-            <View style={styles.mood2}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/7dsJ98d.png' }} />
-            </View>
-            <View style={styles.mood3}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/lnQtHny.png' }} />
-            </View>
-            <View style={styles.mood4}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/LvyQeZi.png' }} />
-            </View>
-            <View style={styles.mood5}>
-              <Image style={styles.icon}
-                source={{ uri: 'https://i.imgur.com/ZRoBJVy.png' }} />
-            </View>
-          </ScrollView>
-          <View style={styles.dateNavigatorLong}>
-            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-            <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
-            <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
+          <View style={styles.mood2}>
+            <Image style={styles.icon}
+              source={{ uri: 'https://i.imgur.com/7dsJ98d.png' }} />
           </View>
-
-          <Text style={styles.infoText}>
-            Swipe left or right to select your mood
+          <View style={styles.mood3}>
+            <Image style={styles.icon}
+              source={{ uri: 'https://i.imgur.com/lnQtHny.png' }} />
+          </View>
+          <View style={styles.mood4}>
+            <Image style={styles.icon}
+              source={{ uri: 'https://i.imgur.com/LvyQeZi.png' }} />
+          </View>
+          <View style={styles.mood5}>
+            <Image style={styles.icon}
+              source={{ uri: 'https://i.imgur.com/ZRoBJVy.png' }} />
+          </View>
+        </ScrollView>
+        { (this.state.selectedDateString == today) ?
+          (
+            <View style={styles.dateNavigatorShort}>
+              <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+              <Text style={styles.dateText}> Today </Text>
+            </View>
+          ) : (
+            <View style={styles.dateNavigatorLong}>
+              <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+              <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
+              <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
+            </View>
+          )
+        }
+        <Text style={styles.infoText}>
+          Swipe left or right to select your mood
               </Text>
-          <TextInput style={styles.inputTextBox}
-            placeholder={'Tell us more about yourself today'} placeholderTextColor={"black"}
-            fontStyle={this.state.selectedMoodDetails.length == 0 ? 'italic' : 'normal'}
-            multiline={true}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ selectedMoodDetails: text })}
-            value={this.state.selectedMoodDetails}
-          />
-          <TouchableOpacity style={styles.button}
-            onPress={() => this.updateMoodDetails()}>
-            <Text style={styles.buttonText}>
-              Update
+        <TextInput style={styles.inputTextBox}
+          placeholder={'Tell us more about yourself today'} placeholderTextColor={"black"}
+          fontStyle={this.state.selectedMoodDetails.length == 0 ? 'italic' : 'normal'}
+          multiline={true}
+          textAlignVertical={'top'}
+          blurOnSubmit={true}
+          onChangeText={(text) => this.setState({ selectedMoodDetails: text })}
+          value={this.state.selectedMoodDetails}
+        />
+        <TouchableOpacity style={styles.button}
+          onPress={() => this.updateMoodDetails()}>
+          <Text style={styles.buttonText}>
+            Update
             </Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+        </TouchableOpacity>
+      </View>
+    );
   };
 }
 
@@ -251,7 +203,7 @@ const styles = StyleSheet.create({
   },
   inputTextBox: {
     position: 'absolute',
-    top: 400,
+    bottom: 70,
     left: 40,
     backgroundColor: 'white',
     opacity: 0.2,

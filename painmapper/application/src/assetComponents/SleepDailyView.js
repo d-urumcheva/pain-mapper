@@ -88,103 +88,62 @@ export default class SleepDailyView extends Component {
 
   render() {
     today = new Date().toJSON().slice(0, 10);
-    if (this.state.selectedDateString == today) {
-      return (
-        <ImageBackground
+    return (
+      <ImageBackground
         source={require('../../images/sleepBackground.jpg')}
-          style={styles.container} >
-          <View style={styles.dateNavigatorShort}>
-            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-            <Text style={styles.dateText}> Today </Text>
-          </View>
-          <Text style={styles.infoText}>
-            Let us know how you slept last night!
+        style={styles.container} >
+        {(this.state.selectedDateString == today) ?
+          (
+            <View style={styles.dateNavigatorShort}>
+              <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+              <Text style={styles.dateText}> Today </Text>
+            </View>
+          ) : (
+            <View style={styles.dateNavigatorLong}>
+              <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+              <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
+              <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
+            </View>
+          )
+        }
+        <Text style={styles.infoText}>
+          Let us know how you slept last night!
               </Text>
-          <TextInput style={styles.inputSleep}
-            placeholder={'How long did you sleep?'} placeholderTextColor={"black"}
-            fontStyle={this.state.sleepDuration.length == 0 ? 'italic' : 'normal'}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ sleepDuration: text })}
-            value={`${this.state.sleepDuration}`}
-          />
-          <Text style={styles.qualityText}>
-            Quality:
+        <TextInput style={styles.inputSleep}
+          placeholder={'How long did you sleep?'} placeholderTextColor={"black"}
+          fontStyle={this.state.sleepDuration.length == 0 ? 'italic' : 'normal'}
+          textAlignVertical={'top'}
+          blurOnSubmit={true}
+          onChangeText={(text) => this.setState({ sleepDuration: text })}
+          value={`${this.state.sleepDuration}`}
+        />
+        <Text style={styles.qualityText}>
+          Quality:
             </Text>
-          <View style={styles.inputSleepQuality}>
-            <AirbnbRating
-              count={5}
-              defaultRating={this.state.sleepQuality}
-              showRating={false}
-              size={20}
-              onFinishRating={(number) => this.setState({ sleepQuality: number })} />
-          </View>
-          <TextInput style={styles.inputSleepDetail}
-            placeholder={'Tell us more'} placeholderTextColor={"black"}
-            fontStyle={this.state.sleepDetails.length == 0 ? 'italic' : 'normal'}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ sleepDetails: text })}
-            value={this.state.sleepDetails}
-          />
-          <TouchableOpacity style={styles.button}
-            onPress={() => this.updateSleepDetails()}>
-            <Text style={styles.buttonText}>
-              Update
+        <View style={styles.inputSleepQuality}>
+          <AirbnbRating
+            count={5}
+            defaultRating={this.state.sleepQuality}
+            showRating={false}
+            size={20}
+            onFinishRating={(number) => this.setState({ sleepQuality: number })} />
+        </View>
+        <TextInput style={styles.inputSleepDetail}
+          placeholder={'Tell us more'} placeholderTextColor={"black"}
+          fontStyle={this.state.sleepDetails.length == 0 ? 'italic' : 'normal'}
+          textAlignVertical={'top'}
+          blurOnSubmit={true}
+          onChangeText={(text) => this.setState({ sleepDetails: text })}
+          value={this.state.sleepDetails}
+        />
+        <TouchableOpacity style={styles.button}
+          onPress={() => this.updateSleepDetails()}>
+          <Text style={styles.buttonText}>
+            Update
             </Text>
-          </TouchableOpacity>
-        </ImageBackground>
-      );
-    }
-    else {
-      return (
-        <ImageBackground
-        source={require('../../images/sleepBackground.jpg')}
-          style={styles.container}>
-          <View style={styles.dateNavigatorLong}>
-            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-            <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
-            <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
-          </View>
-          <Text style={styles.infoText}>
-            Let us know how you slept last night!
-              </Text>
-          <TextInput style={styles.inputSleep}
-            placeholder={'How long did you sleep?'} placeholderTextColor={"black"}
-            fontStyle={this.state.sleepDuration.length == 0 ? 'italic' : 'normal'}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ sleepDuration: text })}
-            value={`${this.state.sleepDuration}`}
-          />
-          <Text style={styles.qualityText}>
-            Quality:
-            </Text>
-          <View style={styles.inputSleepQuality}>
-            <AirbnbRating
-              count={5}
-              defaultRating={this.state.sleepQuality}
-              showRating={false}
-              size={20}
-              onFinishRating={(number) => this.setState({ sleepQuality: number })} />
-          </View>
-          <TextInput style={styles.inputSleepDetail}
-            placeholder={'Tell us more'} placeholderTextColor={"black"}
-            fontStyle={this.state.sleepDetails.length == 0 ? 'italic' : 'normal'}
-            textAlignVertical={'top'}
-            blurOnSubmit={true}
-            onChangeText={(text) => this.setState({ sleepDetails: text })}
-            value={this.state.sleepDetails}
-          />
-          <TouchableOpacity style={styles.button}
-            onPress={() => this.updateSleepDetails()}>
-            <Text style={styles.buttonText}>
-              Update
-            </Text>
-          </TouchableOpacity>
-        </ImageBackground>
-      );
-    }
+        </TouchableOpacity>
+      </ImageBackground>
+    );
   };
 }
 
@@ -219,27 +178,17 @@ const styles = StyleSheet.create({
   },
   infoText: {
     position: 'absolute',
-    top: 150,
-    left: 60,
+    bottom: 250, 
+    left: 70,
     color: 'white',
     fontSize: 16,
-    paddingTop: 100,
-    fontStyle: 'italic'
-  },
-  qualityText: {
-    color: 'white',
-    fontSize: 16,
-    opacity: 0.2,
     fontStyle: 'italic',
-    position: 'absolute',
-    top: 335,
-    left: 40,
-    paddingTop: 12,
-    paddingLeft: 10,
+    paddingTop: 100,
+    marginBottom: 10,
   },
   inputSleep: {
     position: 'absolute',
-    top: 300,
+    bottom: 210,
     left: 40,
     backgroundColor: 'white',
     opacity: 0.2,
@@ -248,17 +197,28 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     fontSize: 15,
     padding: 10,
+    paddingLeft: 30,
+  },
+  qualityText: {
+    color: 'white',
+    position: 'absolute',
+    bottom: 180,
+    left: 40,
+    fontSize: 16,
+    opacity: 0.2,
+    fontStyle: 'italic',
+    paddingTop: 12,
+    paddingLeft: 10,
   },
   inputSleepQuality: {
     position: 'absolute',
-    top: 335,
+    bottom: 180,
     left: 120,
     fontSize: 15,
-    padding: 10,
   },
   inputSleepDetail: {
     position: 'absolute',
-    top: 375,
+    bottom: 70,
     left: 40,
     backgroundColor: 'white',
     opacity: 0.2,
