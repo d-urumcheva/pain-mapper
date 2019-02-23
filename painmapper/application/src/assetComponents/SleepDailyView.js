@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, ImageBackground, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ImageBackground, Dimensions, TouchableOpacity, ToastAndroid } from 'react-native';
 import { AirbnbRating } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
@@ -133,11 +133,20 @@ export default class SleepDailyView extends Component {
           fontStyle={this.state.sleepDetails.length == 0 ? 'italic' : 'normal'}
           textAlignVertical={'top'}
           blurOnSubmit={true}
+          multiline={true}
+          returnKeyType='none'
           onChangeText={(text) => this.setState({ sleepDetails: text })}
           value={this.state.sleepDetails}
         />
         <TouchableOpacity style={styles.button}
-          onPress={() => this.updateSleepDetails()}>
+          onPress={() => {
+            this.updateSleepDetails()
+            ToastAndroid.showWithGravityAndOffset(
+              'Sleep details updated!', 
+              ToastAndroid.SHORT, 
+              ToastAndroid.BOTTOM, 
+              0, 280)
+            }}>
           <Text style={styles.buttonText}>
             Update
             </Text>
@@ -227,6 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     fontSize: 15,
     padding: 10,
+    
   },
   button: {
     position: 'absolute',

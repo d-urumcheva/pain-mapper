@@ -26,6 +26,7 @@ import SleepGoalView from './application/src/assetComponents/SleepGoalView';
 import SleepDailyView from './application/src/assetComponents/SleepDailyView';
 import SleepWeeklyView from './application/src/assetComponents/SleepWeeklyView';
 import SleepMonthlyView from './application/src/assetComponents/SleepMonthlyView';
+import PainDailyView from './application/src/assetComponents/PainDailyView';
 
 class App extends Component {
   render() {
@@ -87,16 +88,13 @@ const LoginStackNavigator = createStackNavigator(
     }, 
   )
 
-  MoodTabNavigator.navigationOptions = {
-    header: null,
-  };
-
-
+  
+  
   const SleepTabNavigator = createMaterialTopTabNavigator(
     {
       Goals: {
         screen: SleepGoalView,
-
+        
       }, 
       Daily: {
         screen: SleepDailyView, 
@@ -120,10 +118,35 @@ const LoginStackNavigator = createStackNavigator(
     {
       swipeEnabled: false
     }
-  )
+    );
 
-  SleepTabNavigator.navigationOptions = {
-    header: null,
+  const PainTabNavigator = createMaterialTopTabNavigator(
+    {
+      Daily: {
+        screen: PainDailyView,
+      },
+    },
+    {
+      swipeEnabled: false
+    }
+    );
+    
+    MoodTabNavigator.navigationOptions = {
+      header: null,
+      headerStyle: {
+        backgroundColor: 'steelblue'
+      }
+    };
+
+    SleepTabNavigator.navigationOptions = {
+      header: null,
+    headerStyle: {
+      backgroundColor: 'steelblue'
+    }
+  };
+
+  PainTabNavigator.navigationOptions = {
+    header: null, 
     headerStyle: {
       backgroundColor: 'steelblue'
     }
@@ -138,8 +161,11 @@ const HomeStackNavigator = createStackNavigator(
   SleepPage: {
     screen: SleepTabNavigator
   },
-  WeatherPage: WeatherPage
-  }, 
+  WeatherPage: WeatherPage,
+  PainPage: {
+    screen: PainTabNavigator
+  }
+  },
   {
     initialRouteName: 'HomePage'
   }

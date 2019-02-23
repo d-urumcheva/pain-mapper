@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, ScrollView, Dimensions, TouchableOpacity, ViewPagerAndroid } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Image, ScrollView, Dimensions, TouchableOpacity, ToastAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
 
@@ -147,13 +147,21 @@ export default class MoodDailyView extends Component {
           placeholder={'Tell us more about yourself today'} placeholderTextColor={"black"}
           fontStyle={this.state.selectedMoodDetails.length == 0 ? 'italic' : 'normal'}
           multiline={true}
+          returnKeyType='none'
           textAlignVertical={'top'}
           blurOnSubmit={true}
           onChangeText={(text) => this.setState({ selectedMoodDetails: text })}
           value={this.state.selectedMoodDetails}
         />
         <TouchableOpacity style={styles.button}
-          onPress={() => this.updateMoodDetails()}>
+          onPress={() => {
+            this.updateMoodDetails()
+            ToastAndroid.showWithGravityAndOffset(
+              'Mood details updated!', 
+              ToastAndroid.SHORT, 
+              ToastAndroid.BOTTOM, 
+              0, 280)
+            }}>
           <Text style={styles.buttonText}>
             Update
             </Text>
