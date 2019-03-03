@@ -224,12 +224,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     moodTextDetail: {
-        paddingLeft: 10
+        paddingLeft: 10,
+        width: '80%'
     },
     row: {
         marginVertical: 0,
     },
     rowText: {
+        flexWrap: 'wrap',
         fontSize: 14,
         color: '#333333',
         paddingLeft: 10,
