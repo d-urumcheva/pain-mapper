@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
 import { DatePicker } from 'react-native-wheel-datepicker';
+import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
 
 var db = firebase.firestore();
@@ -19,44 +20,65 @@ export default class SleepGoalView extends Component {
     updateSleepGoals() {
         let user = firebase.auth().currentUser
         db
-          .collection("users")
-          .doc(user.uid)
-          .collection("settings")
-          .doc("sleepGoals")
-          .set({
-            goalSleepDuration: this.state.goalSleepDuration,
-            goalWakeTime: this.state.goalWakeTime
-          })
-          .then(() => {
-            console.log("Document successfully written!");
-          })
-          .catch((error) => {
-            console.log("Error writing document: ", error);
-          });
-      }
-    
-      getSleepGoals() {
+            .collection("users")
+            .doc(user.uid)
+            .collection("settings")
+            .doc("sleepGoals")
+            .set({
+                goalSleepDuration: this.state.goalSleepDuration,
+                goalWakeTime: this.state.goalWakeTime
+            })
+            .then(() => {
+                console.log("Document successfully written!");
+            })
+            .catch((error) => {
+                console.log("Error writing document: ", error);
+            });
+    }
+
+    getSleepGoals() {
         let user = firebase.auth().currentUser
         db
-          .collection("users")
-          .doc(user.uid)
-          .collection("settings")
-          .doc("sleepGoals")
-          .get()
-          .then(doc => {
-            if (doc.exists) {
-              this.setState({
-                goalSleepDuration: doc.data().goalSleepDuration,
-                goalWakeTime: doc.data().goalWakeTime,
-              })
-            } else {
-              console.log("No such document!");
-            }
-        })
-          .catch(function (error) {
-            console.log("Error getting document:", error);
-          });
-      }
+            .collection("users")
+            .doc(user.uid)
+            .collection("settings")
+            .doc("sleepGoals")
+            .get()
+            .then(doc => {
+                if (doc.exists) {
+                    this.setState({
+                        goalSleepDuration: doc.data().goalSleepDuration,
+                        goalWakeTime: doc.data().goalWakeTime,
+                    })
+                } else {
+                    console.log("No such document!");
+                }
+            })
+            .catch(function (error) {
+                console.log("Error getting document:", error);
+            });
+    }
+
+
+    decrementGoalSleepDuration() {
+        let sleepDuration = this.state.goalSleepDuration;
+        if (sleepDuration === 0) {
+            this.setState({ goalSleepDuration: 12 })
+        }
+        else {
+            this.setState({ goalSleepDuration: sleepDuration - 1 })
+        }
+    }
+
+    incrementGoalSleepDuration() {
+        let sleepDuration = this.state.goalSleepDuration;
+        if (sleepDuration === 12) {
+            this.setState({ goalSleepDuration: 0 })
+        }
+        else {
+            this.setState({ goalSleepDuration: sleepDuration + 1 })
+        }
+    }
 
     componentWillMount() {
         this.getSleepGoals();
@@ -77,12 +99,17 @@ export default class SleepGoalView extends Component {
                         date={this.state.goalWakeTime}
                         textColor='white'
                         mode="time"
-                        onDateChange={ date => this.setState({ goalWakeTime: date })}
+                        onDateChange={date => this.setState({ goalWakeTime: date })}
                     />
                 </View>
                 <Text style={styles.durationText}>
                     How much sleep do you aim for?
                 </Text>
+                <View style={styles.sleepDuration}>
+                    <Icon name="minus" size={25} color={'white'} onPress={() => this.decrementGoalSleepDuration()} />
+                    <Text style={{color: 'white', fontSize: 25, paddingHorizontal: 10}}> {this.state.goalSleepDuration} </Text>
+                    <Icon name="plus" size={25} color={'white'} onPress={() => this.incrementGoalSleepDuration()} />
+                </View>
                 <TouchableOpacity style={styles.button}
                     onPress={() => {
                         this.updateSleepGoals()
@@ -137,6 +164,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         top: 370,
         paddingHorizontal: 30,
+    },
+    sleepDuration: {
+        position: 'absolute',
+        flexDirection: 'row',
+        top: 400,
+        left: 130
     },
     button: {
         position: 'absolute',
