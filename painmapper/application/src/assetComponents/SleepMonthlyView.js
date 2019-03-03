@@ -138,7 +138,7 @@ export default class SleepMonthlyView extends Component {
                             {item.dateString}
                         </Text>
                         <View style={styles.sleepDetails}>
-                            <View style={styles.sleepTextDetail}>
+                            <View style={styles.sleepDurationRating}>
                                 <Text style={styles.rowText}>
                                     {item.sleepDuration} hours,
                                     </Text>
@@ -149,10 +149,12 @@ export default class SleepMonthlyView extends Component {
                                     showRating={false}
                                     imageSize={10} />
                             </View>
+                            <View style={styles.sleepDetailsContainer}>
                                 <Text style={styles.rowText}>
                                     {item.sleepDetails}
                                 </Text>
                             </View>
+                        </View>
                     </View>
                 );
             }
@@ -218,10 +220,27 @@ const styles = StyleSheet.create({
         color: 'lightslategrey',
         paddingLeft: 4,
     },
+    sleepDurationRating: {
+        width: '20%',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        backgroundColor: '#ffffff',
+        marginVertical: 2,
+        marginHorizontal: 5,
+    },
+    sleepDetailsContainer: {
+       width: '70%',
+        flexWrap: 'wrap',
+        backgroundColor: '#ffffff',
+        marginVertical: 2,
+        marginHorizontal: 5
+    },
     sleepDetails: {
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
+        alignItems: 'center', 
+        justifyContent: 'center',
         backgroundColor: '#ffffff',
         marginVertical: 1,
     },
