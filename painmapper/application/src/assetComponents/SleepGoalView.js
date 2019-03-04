@@ -147,14 +147,14 @@ const styles = StyleSheet.create({
         opacity: 0.5,
         fontSize: 20,
         top: 140,
-        paddingHorizontal: 40,
+        alignSelf: 'center'
     },
     timePickerContainer: {
         position: 'absolute',
         top: 160,
-        left: 125,
         width: 100,
         height: 120,
+        marginVertical: 10,
         backgroundColor: `rgba(255, 255, 255, 0)`
     },
     durationText: {
@@ -163,13 +163,12 @@ const styles = StyleSheet.create({
         opacity: 0.5,
         fontSize: 20,
         top: 370,
-        paddingHorizontal: 30,
     },
     sleepDuration: {
         position: 'absolute',
         flexDirection: 'row',
         top: 400,
-        left: 130
+        marginVertical: 10,
     },
     button: {
         position: 'absolute',

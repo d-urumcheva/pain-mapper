@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   dateNavigatorShort: {
     position: 'absolute',
     top: 20,
-    left: 110,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   dateNavigatorLong: {
     position: 'absolute',
     top: 20,
-    left: 85,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   infoText: {
     position: 'absolute',
     bottom: 250, 
-    left: 70,
+    alignSelf: 'center',
     color: 'white',
     fontSize: 16,
     fontStyle: 'italic',
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   inputSleep: {
     position: 'absolute',
     bottom: 210,
-    left: 40,
+    alignSelf: 'center',
     backgroundColor: 'white',
     opacity: 0.2,
     height: 40,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     color: 'white',
     position: 'absolute',
     bottom: 180,
-    left: 40,
+    alignSelf: 'center',
     fontSize: 16,
     opacity: 0.2,
     fontStyle: 'italic',
@@ -222,13 +222,13 @@ const styles = StyleSheet.create({
   inputSleepQuality: {
     position: 'absolute',
     bottom: 180,
-    left: 120,
+    alignSelf: 'center',
     fontSize: 15,
   },
   inputSleepDetail: {
     position: 'absolute',
     bottom: 70,
-    left: 40,
+    alignSelf: 'center',
     backgroundColor: 'white',
     opacity: 0.2,
     height: 100,
@@ -264,45 +264,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#7d56c0',
     width: Dimensions.get('window').width,
-
-  },
-  mood2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#5b6abe',
-    width: Dimensions.get('window').width,
-
-  },
-  mood3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#00bbd2',
-    width: Dimensions.get('window').width,
-
-  },
-  mood4: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9bca64',
-    width: Dimensions.get('window').width,
-
-  },
-  mood5: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4bae4f',
-    width: Dimensions.get('window').width,
-  },
-  icon: {
-    position: 'absolute',
-    top: 10,
-    left: -4,
-    opacity: 0.4,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').width,
-  },
+  }
 })

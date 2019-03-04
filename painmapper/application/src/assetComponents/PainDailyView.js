@@ -209,7 +209,6 @@ const styles = StyleSheet.create({
     dateNavigatorShort: {
         position: 'absolute',
         top: 20,
-        left: 110,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -218,7 +217,6 @@ const styles = StyleSheet.create({
     dateNavigatorLong: {
         position: 'absolute',
         top: 20,
-        left: 85,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -232,7 +230,6 @@ const styles = StyleSheet.create({
     infoText: {
         position: 'absolute',
         top: 250,
-        left: 60,
         color: 'white',
         fontSize: 16,
         paddingTop: 100,

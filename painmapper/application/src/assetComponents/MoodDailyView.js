@@ -5,6 +5,8 @@ import firebase from 'react-native-firebase'
 
 var db = firebase.firestore();
 
+let width = Dimensions.get('window').width;
+
 export default class MoodDailyView extends Component {
 
   constructor() {
@@ -12,7 +14,7 @@ export default class MoodDailyView extends Component {
     this.state = {
       selectedDateString: new Date().toJSON().slice(0, 10),
       selectedDate: new Date(),
-      selectedMood: 720,
+      selectedMood: 2,
       selectedMoodString: "",
       selectedMoodDetails: "",
     }
@@ -56,12 +58,12 @@ export default class MoodDailyView extends Component {
           })
         } else {
           this.setState({
-            selectedMood: 720,
+            selectedMood: 2,
             selectedMoodDetails: "",
           })
           console.log("No such document!");
         }
-        this.refs.scrollView.scrollTo({ x: this.state.selectedMood, y: 0 });
+        this.refs.scrollView.scrollTo({ x: (width*this.state.selectedMood), y: 0 });
       })
       .catch(function (error) {
         console.log("Error getting document:", error);
@@ -86,13 +88,15 @@ export default class MoodDailyView extends Component {
 
   setMoodString(e) {
     let moodString = '';
-    if (e.nativeEvent.contentOffset.x == 0) moodString = 'Very bad'
-    else if (e.nativeEvent.contentOffset.x == 360) moodString = 'Bad'
-    else if (e.nativeEvent.contentOffset.x == 720) moodString = 'Okay'
-    else if (e.nativeEvent.contentOffset.x == 1080) moodString = 'Good'
-    else if (e.nativeEvent.contentOffset.x == 1440) moodString = 'Excellent'
+    let width = Dimensions.get('window').width;
+    let mood = parseInt((e.nativeEvent.contentOffset.x / width).toFixed(0));
+    if (mood == 0) moodString = 'Very bad'
+    else if (mood == 1) moodString = 'Bad'
+    else if (mood == 2) moodString = 'Okay'
+    else if (mood == 3) moodString = 'Good'
+    else if (mood == 4) moodString = 'Excellent'
     this.setState({
-      selectedMood: e.nativeEvent.contentOffset.x,
+      selectedMood: mood,
       selectedMoodString: moodString
     })
   }
@@ -180,7 +184,6 @@ const styles = StyleSheet.create({
   dateNavigatorShort: {
     position: 'absolute',
     top: 20,
-    left: 110,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -189,7 +192,6 @@ const styles = StyleSheet.create({
   dateNavigatorLong: {
     position: 'absolute',
     top: 20,
-    left: 85,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -203,7 +205,6 @@ const styles = StyleSheet.create({
   infoText: {
     position: 'absolute',
     top: 250,
-    left: 60,
     color: 'white',
     fontSize: 16,
     paddingTop: 100,
@@ -212,7 +213,6 @@ const styles = StyleSheet.create({
   inputTextBox: {
     position: 'absolute',
     bottom: 70,
-    left: 40,
     backgroundColor: 'white',
     opacity: 0.2,
     height: 90,

@@ -8,13 +8,13 @@ class MoodIcon extends Component {
         switch(offset) {
             case 0: 
                 return 'https://i.imgur.com/UNt8iI6.png';
-            case 360: 
+            case 1: 
                 return 'https://i.imgur.com/J6Ow4Yv.png';
-            case 720: 
+            case 2: 
                 return 'https://i.imgur.com/1IcGRU9.png';
-            case 1080: 
+            case 3: 
                 return 'https://i.imgur.com/YtymEYq.png';
-            case 1440: 
+            case 4: 
                 return 'https://i.imgur.com/aoh2pox.png';
             default: 
                 return 'https://cdn2.iconfinder.com/data/icons/rounded-white-emoticon/139/Painful-RoundedWhite_emoticon-512.png';
