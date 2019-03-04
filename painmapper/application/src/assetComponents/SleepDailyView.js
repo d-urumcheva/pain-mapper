@@ -117,16 +117,18 @@ export default class SleepDailyView extends Component {
           onChangeText={(text) => this.setState({ sleepDuration: text })}
           value={`${this.state.sleepDuration}`}
         />
-        <Text style={styles.qualityText}>
-          Quality:
+        <View style={styles.sleepQuality}>
+          <Text style={styles.qualityText}>
+            Quality:
             </Text>
-        <View style={styles.inputSleepQuality}>
-          <AirbnbRating
-            count={5}
-            defaultRating={this.state.sleepQuality}
-            showRating={false}
-            size={20}
-            onFinishRating={(number) => this.setState({ sleepQuality: number })} />
+          <View style={styles.inputSleepQuality}>
+            <AirbnbRating
+              count={5}
+              defaultRating={this.state.sleepQuality}
+              showRating={false}
+              size={20}
+              onFinishRating={(number) => this.setState({ sleepQuality: number })} />
+          </View>
         </View>
         <TextInput style={styles.inputSleepDetail}
           placeholder={'Tell us more'} placeholderTextColor={"black"}
@@ -142,11 +144,11 @@ export default class SleepDailyView extends Component {
           onPress={() => {
             this.updateSleepDetails()
             ToastAndroid.showWithGravityAndOffset(
-              'Sleep details updated!', 
-              ToastAndroid.SHORT, 
-              ToastAndroid.BOTTOM, 
+              'Sleep details updated!',
+              ToastAndroid.SHORT,
+              ToastAndroid.BOTTOM,
               0, 280)
-            }}>
+          }}>
           <Text style={styles.buttonText}>
             Update
             </Text>
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     position: 'absolute',
-    bottom: 250, 
+    bottom: 250,
     alignSelf: 'center',
     color: 'white',
     fontSize: 16,
@@ -208,21 +210,24 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 30,
   },
-  qualityText: {
-    color: 'white',
+  sleepQuality: {
     position: 'absolute',
     bottom: 180,
     alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start', 
+    width: 280,
+
+  },
+  qualityText: {
+    color: 'white',
     fontSize: 16,
     opacity: 0.2,
     fontStyle: 'italic',
-    paddingTop: 12,
-    paddingLeft: 10,
+    paddingTop: 3,
   },
   inputSleepQuality: {
-    position: 'absolute',
-    bottom: 180,
-    alignSelf: 'center',
+    marginLeft: 30,
     fontSize: 15,
   },
   inputSleepDetail: {
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     fontSize: 15,
     padding: 10,
-    
+
   },
   button: {
     position: 'absolute',
