@@ -94,7 +94,13 @@ export default class MoodWeeklyView extends Component {
                 });
         })
 
-        moodDays = await Promise.all(promises);
+        moodDays = await Promise.all(promises)
+            .then(values => {
+                console.log('Success!')
+            })
+            .catch(error => {
+                console.log(error.message)
+            });
 
         for (let i = 0; i < moodDays.length; i++) {
             var options = { weekday: 'long' };

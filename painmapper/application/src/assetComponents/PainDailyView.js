@@ -15,12 +15,10 @@ export default class PainDailyView extends Component {
             pain: [
                 { type: 'arthritis', intensity: 0 },
                 { type: 'back pain',  intensity: 0 },
-                { type: 'bladder pain',  intensity: 0 },
                 { type: 'endometriosis',  intensity: 0 },
                 { type: 'fibromyalgia',  intensity: 0 },
                 { type: 'ibs',  intensity: 0 },
                 { type: 'migraine',  intensity: 0 },
-                { type: 'pelvic pain',  intensity: 0 },
             ]
         }
         this.getPainDetails(this.state.selectedDateString);
@@ -63,12 +61,10 @@ export default class PainDailyView extends Component {
                     let pain = [
                         { type: 'arthritis',  intensity: 0 },
                         { type: 'back pain',  intensity: 0 },
-                        { type: 'bladder pain',  intensity: 0 },
                         { type: 'endometriosis',  intensity: 0 },
                         { type: 'fibromyalgia',  intensity: 0 },
                         { type: 'ibs',  intensity: 0 },
                         { type: 'migraine',  intensity: 0 },
-                        { type: 'pelvic pain',  intensity: 0 },
                     ]
                     this.setState({
                         pain: pain
@@ -103,8 +99,6 @@ export default class PainDailyView extends Component {
                 return 'https://i.imgur.com/LFtyLU3.png';
             case 'back pain':
                 return 'https://i.imgur.com/z0mHmJN.png';
-            case 'bladder pain':
-                return 'https://i.imgur.com/ytteBh1.png';
             case 'endometriosis':
                 return 'https://i.imgur.com/zK7iqAW.png';
             case 'fibromyalgia':
@@ -113,8 +107,6 @@ export default class PainDailyView extends Component {
                 return 'https://i.imgur.com/maN0zEr.png';
             case 'migraine':
                 return 'https://i.imgur.com/xWpqgWQ.png';
-            case 'pelvic pain':
-                return 'https://i.imgur.com/x8kydj1.png';
             default:
                 return 'https://cdn2.iconfinder.com/data/icons/rounded-white-emoticon/139/Painful-RoundedWhite_emoticon-512.png';
         }
@@ -257,16 +249,24 @@ const styles = StyleSheet.create({
     scrollView: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+        alignItems: 'center', 
+        justifyContent: 'center',
         paddingLeft: 3,
         paddingTop: 10
 
+    },
+    tile: {
+        justifyContent: 'center', 
+        alignItems: 'center',
+        alignSelf: 'center'
     },
     tileNotPressed: {
         justifyContent: 'center',
         alignItems: 'center',
         width: Dimensions.get('window').width /3-9,
         height: Dimensions.get('window').width /3-8, 
-        margin: 3,
+        marginVertical: 10,
+        marginHorizontal: 15, 
         borderRadius: 100,
         borderWidth: 4, 
         backgroundColor: '#efeff4', 
@@ -277,7 +277,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width /3-9,
         height: Dimensions.get('window').width /3-9, 
-        margin: 3,
+        marginVertical: 10,
+        marginHorizontal: 15, 
         borderRadius: 100, 
         backgroundColor: 'white', 
         borderWidth: 4, 
@@ -288,7 +289,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width /3-9,
         height: Dimensions.get('window').width /3-9, 
-        margin: 3,
+        marginVertical: 10,
+        marginHorizontal: 15, 
         borderRadius: 100, 
         backgroundColor: 'white', 
         borderWidth: 4, 
@@ -299,7 +301,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width /3-9,
         height: Dimensions.get('window').width /3-9, 
-        margin: 3,
+        marginVertical: 10,
+        marginHorizontal: 15, 
         borderRadius: 100, 
         backgroundColor: 'white', 
         borderWidth: 4, 
@@ -310,8 +313,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width /3-9,
         height: Dimensions.get('window').width /3-9, 
-        margin: 3,
-        marginVertical: 4,
+        marginVertical: 10,
+        marginHorizontal: 15, 
         borderRadius: 100, 
         backgroundColor: 'white', 
         borderWidth: 4, 
