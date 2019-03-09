@@ -28,6 +28,7 @@ import SleepWeeklyView from './application/src/assetComponents/SleepWeeklyView';
 import SleepMonthlyView from './application/src/assetComponents/SleepMonthlyView';
 import PainDailyView from './application/src/assetComponents/PainDailyView';
 import PainWeeklyView from './application/src/assetComponents/PainWeeklyView';
+import PainMonthlyView from './application/src/assetComponents/PainMonthlyView';
 
 class App extends Component {
   render() {
@@ -128,6 +129,9 @@ const LoginStackNavigator = createStackNavigator(
       },
       Weekly: {
         screen: PainWeeklyView,
+      },
+      Monthly: {
+        screen: PainMonthlyView,
       },
     },
     {

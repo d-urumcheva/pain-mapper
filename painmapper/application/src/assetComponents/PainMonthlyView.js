@@ -5,13 +5,13 @@ import firebase from 'react-native-firebase';
 
 var db = firebase.firestore();
 
-export default class PainWeeklyView extends Component {
+export default class PainMonthlyView extends Component {
 
     constructor() {
         super()
         this.state = {
-            selectedWeek: new Date(),
-            selectedWeekDatesStrings: [],
+            selectedMonth: new Date(),
+            selectedMonthDatesStrings: [],
             isLoading: true,
             daysOfWeek: [],
             painByDays: [],
@@ -23,26 +23,27 @@ export default class PainWeeklyView extends Component {
             migraineByDay: [],
         };
 
-        this.getWeeklyPainDetails = this.getWeeklyPainDetails.bind(this);
+        this.getMonthlyPainDetails = this.getMonthlyPainDetails.bind(this);
     }
 
-    async setWeekDates(week) {
+    async setMonthDates(month) {
         let dates = [];
-        let day = week;
+        let day = month;
+        let numberOfDays = day.toJSON().slice(8, 10)
         dates.push(day.toJSON().slice(0, 10));
-        for (var i = 0; i < 6; i++) {
+        for (var i = 1; i < numberOfDays; i++) {
             day = new Date(day.getTime() - 864e5);
             dates.unshift(day.toJSON().slice(0, 10));
         }
-        this.setState({ selectedWeekDatesStrings: dates })
+        this.setState({ selectedMonthDatesStrings: dates })
     }
 
-    async getWeeklyPainDetails(week) {
+    async getMonthlyPainDetails(month) {
 
-        await this.setWeekDates(week);
+        await this.setMonthDates(month);
 
         let user = firebase.auth().currentUser
-        let weekDays = this.state.selectedWeekDatesStrings;
+        let monthDays = this.state.selectedMonthDatesStrings;
         let daysOfWeek = [];
         let painByDays = [];
         let arthritisByDay = [];
@@ -51,7 +52,7 @@ export default class PainWeeklyView extends Component {
         let fibromyalgiaByDay = [];
         let ibsByDay = [];
         let migraineByDay = [];
-        let promises = weekDays.map(function (item) {
+        let promises = monthDays.map(function (item) {
             return db
                 .collection("users")
                 .doc(user.uid)
@@ -125,7 +126,7 @@ export default class PainWeeklyView extends Component {
 
         for (let i = 0; i < painDays.length; i++) {
             var options = { weekday: 'long' };
-            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(painDays[i].date).slice(0, 3));
+            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(painDays[i].date).slice(0, 1));
             painByDays.push(painDays[i].overallPain);
             arthritisByDay.push(painDays[i].arthritisIntensity);
             backPainByDay.push(painDays[i].backPainIntensity);
@@ -148,27 +149,27 @@ export default class PainWeeklyView extends Component {
         })
     }
 
-    setPreviousWeek() {
-        var prevWeek = new Date(this.state.selectedDate.getTime() - 7 * 864e5);
-        this.setState({ selectedWeek: prevWeek })
-        var prevWeekString = prevWeek.toJSON().slice(0, 10);
-        this.setState({ selectedWeekString: prevWeekString });
+    setPreviousMonth() {
+        var prevMonth = new Date(this.state.selectedDate.getTime() - 7 * 864e5);
+        this.setState({ selectedMonth: prevMonth })
+        var prevMonthString = prevMonth.toJSON().slice(0, 10);
+        this.setState({ selectedMonthString: prevMonthString });
 
     }
 
-    setNextWeek() {
-        var nextWeek = new Date(this.state.selectedDate.getTime() + 7 * 864e5);
-        this.setState({ selectedWeek: nextWeek })
-        var nextWeekString = nextWeek.toJSON().slice(0, 10);
-        this.setState({ selectedWeekString: nextWeekString });
+    setNextMonth() {
+        var nextMonth = new Date(this.state.selectedDate.getTime() + 7 * 864e5);
+        this.setState({ selectedMonth: nextMonth })
+        var nextMonthString = nextMonth.toJSON().slice(0, 10);
+        this.setState({ selectedMonthString: nextMonthString });
     }
 
     componentWillMount() {
-        this.getWeeklyPainDetails(this.state.selectedWeek)
+        this.getMonthlyPainDetails(this.state.selectedMonth)
     }
 
     render() {
-        const weeklyView = this.state.selectedWeekDatesStrings.map((item, index) => {
+        const monthlyView = this.state.selectedMonthDatesStrings.map((item, index) => {
             return (
                 <View style={styles.row} key={index}>
                     <Text style={styles.dateString}>
@@ -317,7 +318,7 @@ export default class PainWeeklyView extends Component {
                         />
                         </View>
                         </ScrollView>
-                    {weeklyView}
+                    {monthlyView}
                 </ScrollView>
             )
         }
