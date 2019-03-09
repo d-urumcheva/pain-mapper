@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ToastAndroid } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ToastAndroid, CheckBox, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
 
@@ -12,9 +12,14 @@ export default class MedicationDailyView extends Component {
         this.state = {
             selectedDateString: new Date().toJSON().slice(0, 10),
             selectedDate: new Date(),
-
+            isLoading: true,
+            medication: [],
+            medicationMorning: [],
+            medicationAfternoon: [],
+            medicationEvening: [],
+            medicationNight: [],
         }
-        this.getMedicationDetails(this.state.selectedDateString);
+        this.getMedicationSchedule(this.state.selectedDateString);
     }
 
     updateMedicationDetails() {
@@ -26,15 +31,71 @@ export default class MedicationDailyView extends Component {
             .doc(this.state.selectedDateString)
             .set({
                 selectedDate: this.state.selectedDate,
-                // sleepDuration: this.state.sleepDuration,
-                // sleepQuality: this.state.sleepQuality,
-                // sleepDetails: this.state.sleepDetails
+
             })
             .then(() => {
                 console.log("Document successfully written!");
             })
             .catch((error) => {
                 console.log("Error writing document: ", error);
+            });
+    }
+
+    getMedicationSchedule() {
+        let medication;
+        let medicationMorning = [];
+        let medicationAfternoon = [];
+        let medicationEvening = [];
+        let medicationNight = [];
+        let object;
+        let user = firebase.auth().currentUser
+        db
+            .collection("users")
+            .doc(user.uid)
+            .collection("settings")
+            .doc("medicationGoals")
+            .get()
+            .then(doc => {
+                if (doc.exists) {
+                    medication = doc.data().medication
+                    medication.map((item) => {
+                        object = {
+                            name: item.name,
+                            checkbox: false
+                        }
+                        switch (item.time) {
+                            case 'sunrise':
+                                medicationMorning.push(object);
+                                break;
+                            case 'sun':
+                                medicationAfternoon.push(object);
+                                break;
+                            case 'sunset':
+                                medicationEvening.push(object);
+                                break;
+                            case 'moon':
+                                medicationNight.push(object);
+                                break;
+                            default: { }
+                        }
+                    })
+                    this.setState({
+                        isLoading: false,
+                        medication: doc.data().medication,
+                        medicationMorning: medicationMorning,
+                        medicationAfternoon: medicationAfternoon,
+                        medicationEvening: medicationEvening,
+                        medicationNight: medicationNight
+                    })
+                } else {
+                    this.setState({
+                        medication: [],
+                    })
+                    console.log("No such document!");
+                }
+            })
+            .catch(function (error) {
+                console.log("Error getting document:", error);
             });
     }
 
@@ -81,7 +142,72 @@ export default class MedicationDailyView extends Component {
         this.setState({ selectedDateString: nextDayString });
     }
 
+    toggleCheckBoxValue(item, index, array) {
+        let newArray = array;
+        let object = {
+            name: item.name,
+            checkbox: !item.checkbox
+        }
+        array[index] = object;
+        this.setState({ $array: array })
+    }
+
+    componentWillMount() {
+        this.getMedicationSchedule();
+    }
+
     render() {
+        const medicationMorning = this.state.medicationMorning.map((item, index) => {
+            return (
+                <View style={styles.row} key={item.name}>
+                    <Text> {item.name} </Text>
+                    <CheckBox value={item.checkbox}
+                        size={15}
+                        onValueChange={() => this.toggleCheckBoxValue(item, index, this.state.medicationMorning)}
+                    />
+                </View>
+            )
+        })
+        const medicationAfternoon = this.state.medicationAfternoon.map((item, index) => {
+            return (
+                <View style={styles.row} key={item.name}>
+                    <Text> {item.name} </Text>
+                    <CheckBox value={item.checkbox}
+                        onValueChange={() => this.toggleCheckBoxValue(item, index, this.state.medicationAfternoon)}
+                    />
+                </View>
+            )
+        })
+        const medicationEvening = this.state.medicationEvening.map((item, index) => {
+            return (
+                <View style={styles.row} key={item.name}>
+                    <Text> {item.name} </Text>
+                    <CheckBox value={item.checkbox}
+                        onValueChange={() => this.toggleCheckBoxValue(item, index, this.state.medicationEvening)}
+                    />
+                </View>
+            )
+        })
+        const medicationNight = this.state.medicationNight.map((item, index) => {
+            return (
+                <View style={styles.row} key={item.name}>
+                    <Text> {item.name} </Text>
+                    <CheckBox value={item.checkbox}
+                        onValueChange={() => this.toggleCheckBoxValue(item, index, this.state.medicationNight)}
+                    />
+                </View>
+            )
+        })
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            )
+        }
+        else {   
+        { console.log(this.state) }
         today = new Date().toJSON().slice(0, 10);
         return (
             <View style={styles.container} >
@@ -101,28 +227,32 @@ export default class MedicationDailyView extends Component {
                 }
 
                 <View style={styles.medicationContainer}>
-                    <View style={styles.row}>
+                    <View>
                         <View style={styles.dayTile}>
-                            <Text style={styles.dayTime}> 
+                            <Text style={styles.dayTime}>
                                 Morning
                             </Text>
+                            {medicationMorning}
                         </View>
                         <View style={styles.dayTile}>
-                        <Text style={styles.dayTime}> 
+                            <Text style={styles.dayTime}>
                                 Afternoon
                             </Text>
+                            {medicationAfternoon}
                         </View>
                     </View>
-                    <View style={styles.row}>
+                    <View>
                         <View style={styles.dayTile}>
-                        <Text style={styles.dayTime}> 
+                            <Text style={styles.dayTime}>
                                 Evening
                             </Text>
+                            {medicationEvening}
                         </View>
                         <View style={styles.dayTile}>
-                        <Text style={styles.dayTime}> 
+                            <Text style={styles.dayTime}>
                                 Night
                             </Text>
+                            {medicationNight}
                         </View>
                     </View>
                 </View>
@@ -135,13 +265,14 @@ export default class MedicationDailyView extends Component {
                             ToastAndroid.SHORT,
                             ToastAndroid.BOTTOM,
                             0, 280)
-                    }}>
+                        }}>
                     <Text style={styles.buttonText}>
                         Update
             </Text>
                 </TouchableOpacity>
             </View>
         );
+    }
     };
 }
 
@@ -184,23 +315,31 @@ const styles = StyleSheet.create({
     },
     medicationContainer: {
         height: Dimensions.get('window').width,
-        width: Dimensions.get('window').width, 
-        flexDirection: 'row', 
-    },  
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+    },
     row: {
-
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: Dimensions.get('window').width/3,
+        height: Dimensions.get('window').width/3,
+        margin: 5,
+        height: 15,
     },
     dayTile: {
-        width: Dimensions.get('window').width/2 - 10,
-        height: Dimensions.get('window').width/2 - 10,
-        borderRadius: 25, 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        width: Dimensions.get('window').width / 2 - 10,
+        height: Dimensions.get('window').width / 2 - 10,
+        borderRadius: 25,
         margin: 5,
-        backgroundColor: '#F0F0F0', 
+        backgroundColor: '#F0F0F0',
         opacity: 0.5
     },
     dayTime: {
         fontSize: 18,
-        marginVertical: 5, 
+        marginVertical: 5,
         textAlign: 'center'
     },
 

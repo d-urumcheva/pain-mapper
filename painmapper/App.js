@@ -74,12 +74,12 @@ const MoodTabNavigator = createMaterialTopTabNavigator(
         header: null,
       }
     },
-    Weekly: {
-      screen: MoodWeeklyView,
-      navigationOptions: {
-        header: null,
-      }
-    },
+    // Weekly: {
+    //   screen: MoodWeeklyView,
+    //   navigationOptions: {
+    //     header: null,
+    //   }
+    // },
     Monthly: {
       screen: MoodMonthlyView,
       navigationOptions: {
@@ -143,11 +143,11 @@ const PainTabNavigator = createMaterialTopTabNavigator(
 
 const MedicationTabNavigator = createMaterialTopTabNavigator(
   {
-    Prescribed: {
-      screen: MedicationGoalView,
-    },
     Daily: {
       screen: MedicationDailyView,
+    },
+    Prescribed: {
+      screen: MedicationGoalView,
     },
   },
   {

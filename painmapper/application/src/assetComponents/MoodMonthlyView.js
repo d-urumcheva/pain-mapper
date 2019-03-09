@@ -53,7 +53,7 @@ export default class MoodMonthlyView extends Component {
                 .get()
                 .then(doc => {
                     let date, dateString, mood, moodDetail, moodString, isMoodRecorded;
-                    let object;
+                    let object = {};
 
                     if (doc.exists) {
                         date = doc.data().selectedDate
@@ -73,8 +73,8 @@ export default class MoodMonthlyView extends Component {
                     } else {
                         dateString = item
                         date = new Date(item);
-                        mood = 0,
-                            moodString = "No mood recorded"
+                        mood = 0
+                        moodString = "No mood recorded"
                         moodDetail = ""
                         isMoodRecorded = false
                         object = {
@@ -95,13 +95,10 @@ export default class MoodMonthlyView extends Component {
                 });
         })
 
-        moodDays = await Promise.all(promises)
-            .then(values => {
-                console.log('Success!')
-            })
-            .catch(error => {
-                console.log(error.message)
-            });
+        try {
+            moodDays = await Promise.all(promises);
+        } catch (err) {
+        }
 
         for (let i = 0; i < moodDays.length; i++) {
             var options = { weekday: 'long' };

@@ -13,7 +13,7 @@ export default class MedicationGoalView extends Component {
             newMedTime: 'sunrise',
             newMedName: '',
             newMedDose: '', 
-            medication: []
+            medication: [], 
         }
         this.getMedicationDetails();
     }
@@ -26,7 +26,7 @@ export default class MedicationGoalView extends Component {
             .collection("settings")
             .doc("medicationGoals")
             .set({
-                medication: this.state.medication
+                medication: this.state.medication,
             })
             .then(() => {
                 console.log("Document successfully written!");
@@ -47,11 +47,11 @@ export default class MedicationGoalView extends Component {
             .then(doc => {
                 if (doc.exists) {
                     this.setState({
-                        medication: doc.data().medication
+                        medication: doc.data().medication,
                     })
                 } else {
                     this.setState({
-                        medication: []
+                        medication: [], 
                     })
                     console.log("No such document!");
                 }
@@ -63,12 +63,12 @@ export default class MedicationGoalView extends Component {
 
     addMedication() {
         let medication = this.state.medication;
-
         let object = {
             time: this.state.newMedTime, 
             name: this.state.newMedName, 
             dose: this.state.newMedDose
         }
+
         medication.push(object)
         let order = { sunrise: 1, sun: 2, sunset: 3, moon: 4}
         medication.sort( (a, b) => { return order[a.time] - order[b.time]} );
