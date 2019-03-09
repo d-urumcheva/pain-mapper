@@ -82,7 +82,6 @@ export default class PainDailyView extends Component {
         this.setState({ selectedDate: prevDay })
         var prevDayString = prevDay.toJSON().slice(0, 10);
         this.setState({ selectedDateString: prevDayString });
-        this.getPainDetails(prevDayString)
     }
 
     setNextDay() {
@@ -90,7 +89,6 @@ export default class PainDailyView extends Component {
         this.setState({ selectedDate: nextDay })
         var nextDayString = nextDay.toJSON().slice(0, 10);
         this.setState({ selectedDateString: nextDayString });
-        this.getPainDetails(nextDayString)
     }
 
     setIconUri = name => {

@@ -29,6 +29,8 @@ import SleepMonthlyView from './application/src/assetComponents/SleepMonthlyView
 import PainDailyView from './application/src/assetComponents/PainDailyView';
 import PainWeeklyView from './application/src/assetComponents/PainWeeklyView';
 import PainMonthlyView from './application/src/assetComponents/PainMonthlyView';
+import MedicationGoalView from './application/src/assetComponents/MedicationGoalView';
+import MedicationDailyView from './application/src/assetComponents/MedicationDailyView';
 
 class App extends Component {
   render() {
@@ -45,13 +47,13 @@ const LoginStackNavigator = createStackNavigator(
     LoginPage: {
       screen: LoginPage,
       navigationOptions: {
-        header: null, 
+        header: null,
       }
     },
     RegisterPage: {
       screen: RegisterPage,
       navigationOptions: {
-        header: null, 
+        header: null,
       }
     },
     ForgotPassPage: ForgotPassPage
@@ -64,125 +66,149 @@ const LoginStackNavigator = createStackNavigator(
     }
   })
 
-  const MoodTabNavigator = createMaterialTopTabNavigator(
-    {
-      Daily: {
-        screen: MoodDailyView,
-        navigationOptions: {
-          header: null, 
-        }
-      }, 
-      Weekly: {
-        screen: MoodWeeklyView, 
-        navigationOptions: {
-          header: null, 
-        }
-      },
-      Monthly: {
-        screen: MoodMonthlyView, 
-        navigationOptions: {
-          header: null, 
-        }
+const MoodTabNavigator = createMaterialTopTabNavigator(
+  {
+    Daily: {
+      screen: MoodDailyView,
+      navigationOptions: {
+        header: null,
       }
-    }, 
-    {
-      swipeEnabled: false
-    }, 
-  )
-
-  
-  
-  const SleepTabNavigator = createMaterialTopTabNavigator(
-    {
-      Goals: {
-        screen: SleepGoalView,
-        
-      }, 
-      Daily: {
-        screen: SleepDailyView, 
-        navigationOptions: {
-          header: null, 
-        }
-      },
-      Weekly: {
-        screen: SleepWeeklyView, 
-        navigationOptions: {
-          header: null, 
-        }
-      },
-      Monthly: {
-        screen: SleepMonthlyView, 
-        navigationOptions: {
-          header: null, 
-        }
-      }
-    }, 
-    {
-      swipeEnabled: false
-    }
-    );
-
-  const PainTabNavigator = createMaterialTopTabNavigator(
-    {
-      Daily: {
-        screen: PainDailyView,
-      },
-      Weekly: {
-        screen: PainWeeklyView,
-      },
-      Monthly: {
-        screen: PainMonthlyView,
-      },
     },
-    {
-      swipeEnabled: false
-    }
-    );
-    
-    MoodTabNavigator.navigationOptions = {
-      header: null,
-      headerStyle: {
-        backgroundColor: 'steelblue'
+    Weekly: {
+      screen: MoodWeeklyView,
+      navigationOptions: {
+        header: null,
       }
-    };
-
-    SleepTabNavigator.navigationOptions = {
-      header: null,
-    headerStyle: {
-      backgroundColor: 'steelblue'
+    },
+    Monthly: {
+      screen: MoodMonthlyView,
+      navigationOptions: {
+        header: null,
+      }
     }
-  };
+  },
+  {
+    swipeEnabled: false
+  },
+)
 
-  PainTabNavigator.navigationOptions = {
-    header: null, 
-    headerStyle: {
-      backgroundColor: 'steelblue'
+
+
+const SleepTabNavigator = createMaterialTopTabNavigator(
+  {
+    Goals: {
+      screen: SleepGoalView,
+
+    },
+    Daily: {
+      screen: SleepDailyView,
+      navigationOptions: {
+        header: null,
+      }
+    },
+    Weekly: {
+      screen: SleepWeeklyView,
+      navigationOptions: {
+        header: null,
+      }
+    },
+    Monthly: {
+      screen: SleepMonthlyView,
+      navigationOptions: {
+        header: null,
+      }
     }
-  };
+  },
+  {
+    swipeEnabled: false
+  }
+);
+
+const PainTabNavigator = createMaterialTopTabNavigator(
+  {
+    Daily: {
+      screen: PainDailyView,
+    },
+    Weekly: {
+      screen: PainWeeklyView,
+    },
+    Monthly: {
+      screen: PainMonthlyView,
+    },
+  },
+  {
+    swipeEnabled: false
+  }
+);
+
+const MedicationTabNavigator = createMaterialTopTabNavigator(
+  {
+    Prescribed: {
+      screen: MedicationGoalView,
+    },
+    Daily: {
+      screen: MedicationDailyView,
+    },
+  },
+  {
+    swipeEnabled: false
+  }
+);
+
+MoodTabNavigator.navigationOptions = {
+  header: null,
+  headerStyle: {
+    backgroundColor: 'steelblue'
+  }
+};
+
+SleepTabNavigator.navigationOptions = {
+  header: null,
+  headerStyle: {
+    backgroundColor: 'steelblue'
+  }
+};
+
+PainTabNavigator.navigationOptions = {
+  header: null,
+  headerStyle: {
+    backgroundColor: 'steelblue'
+  }
+};
+
+MedicationTabNavigator.navigationOptions = {
+  header: null,
+  headerStyle: {
+    backgroundColor: 'steelblue'
+  }
+};
 
 const HomeStackNavigator = createStackNavigator(
   {
-  HomePage: HomePage,
-  MoodPage: {
-    screen: MoodTabNavigator
-  }, 
-  SleepPage: {
-    screen: SleepTabNavigator
-  },
-  WeatherPage: WeatherPage,
-  PainPage: {
-    screen: PainTabNavigator
-  }
+    HomePage: HomePage,
+    MoodPage: {
+      screen: MoodTabNavigator
+    },
+    SleepPage: {
+      screen: SleepTabNavigator
+    },
+    WeatherPage: WeatherPage,
+    PainPage: {
+      screen: PainTabNavigator
+    },
+    MedicationPage: {
+      screen: MedicationTabNavigator
+    }
   },
   {
     initialRouteName: 'HomePage'
   }
 )
 
-const SettingsStackNavigation = createStackNavigator( 
+const SettingsStackNavigation = createStackNavigator(
   {
     SettingsPage: SettingsPage,
-    PersonalDetailsPage: PersonalDetailsPage, 
+    PersonalDetailsPage: PersonalDetailsPage,
     AssetsPage: AssetsPage
   }
 )
@@ -190,7 +216,7 @@ const SettingsStackNavigation = createStackNavigator(
 const DashboardTabNavigator = createBottomTabNavigator(
   {
     Home: {
-      screen: HomeStackNavigator, 
+      screen: HomeStackNavigator,
       navigationOptions: {
         tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor }) => <Icon name="home" size={25} color={tintColor} />
@@ -228,7 +254,7 @@ const AppSwitchNavigator = createSwitchNavigator(
   },
   {
     initialRouteName: 'LoadingPage'
-  }, 
+  },
   {
     defaultNavigationOptions: {
       headerStyle: {

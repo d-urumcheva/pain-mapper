@@ -20,6 +20,7 @@ class AssetsPage extends Component {
         symptoms: false, 
         mood: false, 
         weather: false,
+        medication: false
     }
 
     static navigationOptions = {
@@ -68,6 +69,10 @@ class AssetsPage extends Component {
         {
             name: 'weather',
             assetName: 'Weather'
+        }, 
+        {
+            name: 'medication', 
+            assetName: 'Medication'
         }
     ];
 
@@ -89,7 +94,8 @@ class AssetsPage extends Component {
                         motivation: doc.data().state.motivation,
                         symptoms: doc.data().state.symptoms,
                         mood: doc.data().state.mood,
-                        weather: doc.data().state.weather
+                        weather: doc.data().state.weather, 
+                        medication: doc.data().state.medication
                     })
                 } else {
                     console.log("No such document!");

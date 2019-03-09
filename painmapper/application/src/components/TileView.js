@@ -34,6 +34,7 @@ class TileView extends Component {
                         symptoms: doc.data().state.symptoms,
                         mood: doc.data().state.mood, 
                         weather: doc.data().state.weather, 
+                        medication: doc.data().state.medication
                     })
                 } else {
                     console.log("No such document!");
