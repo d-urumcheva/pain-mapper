@@ -74,12 +74,12 @@ const MoodTabNavigator = createMaterialTopTabNavigator(
         header: null,
       }
     },
-    // Weekly: {
-    //   screen: MoodWeeklyView,
-    //   navigationOptions: {
-    //     header: null,
-    //   }
-    // },
+    Weekly: {
+      screen: MoodWeeklyView,
+      navigationOptions: {
+        header: null,
+      }
+    },
     Monthly: {
       screen: MoodMonthlyView,
       navigationOptions: {

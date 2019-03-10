@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import {format} from 'date-fns';
 import { LineChart } from 'react-native-chart-kit';
 import firebase from 'react-native-firebase'
 import MoodIcon from '../components/MoodIcon';
@@ -51,56 +52,25 @@ export default class MoodWeeklyView extends Component {
                 .doc(item)
                 .get()
                 .then(doc => {
-                    let date, dateString, mood, moodDetail, moodString, isMoodRecorded;
-                    let object;
 
-                    if (doc.exists) {
-                        date = doc.data().selectedDate
-                        dateString = item
-                        mood = doc.data().selectedMood
-                        moodString = doc.data().selectedMoodString
-                        moodDetail = doc.data().selectedMoodDetails
-                        isMoodRecorded = true
-                        object = {
-                            date,
-                            dateString,
-                            mood,
-                            moodString,
-                            moodDetail,
-                            isMoodRecorded
-                        }
-                    } else {
-                        dateString = item
-                        date = new Date(item);
-                        mood = 0,
-                            moodString = "No mood recorded"
-                        moodDetail = ""
-                        isMoodRecorded = false
-                        object = {
-                            date,
-                            dateString,
-                            mood,
-                            moodString,
-                            moodDetail,
-                            isMoodRecorded
-                        }
-                        console.log("No such document!");
+                    let docData = doc.exists ? doc.data() : null
+                    return {
+                        date: docData ? docData.selectedDate : new Date(item),
+                        dateString: item,
+                        mood: docData ? docData.selectedMood : 0,
+                        moodString: docData ? docData.selectedMoodString : 'No mood recorded',
+                        moodDetail: docData ? docData.selectedMoodDetails : '',
+                        isMoodRecorded: !!docData
                     }
-
-                    return object;
                 })
                 .catch(function (error) {
                     console.log("Error getting document:", error);
                 });
         })
-        try {
-            moodDays = await Promise.all(promises);
-        } catch (err) {
-        }
 
+        moodDays = await Promise.all(promises);
         for (let i = 0; i < moodDays.length; i++) {
-            var options = { weekday: 'long' };
-            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(moodDays[i].date).slice(0, 3));
+            daysOfWeek.push(format(moodDays[i].date, 'ddd'))
             moodByDays.push(moodDays[i].mood);
         }
 
