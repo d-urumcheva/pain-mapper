@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ToastAndroid, CheckBox, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ToastAndroid, CheckBox, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import firebase from 'react-native-firebase'
 
@@ -19,7 +19,7 @@ export default class MedicationDailyView extends Component {
             medicationEvening: [],
             medicationNight: [],
         }
-        this.getMedicationSchedule(this.state.selectedDateString);
+        this.getMedicationSchedule();
     }
 
     updateMedicationDetails() {
@@ -31,6 +31,10 @@ export default class MedicationDailyView extends Component {
             .doc(this.state.selectedDateString)
             .set({
                 selectedDate: this.state.selectedDate,
+                medicationMorning: this.state.medicationMorning,
+                medicationAfternoon: this.state.medicationAfternoon,
+                medicationEvening: this.state.medicationEvening,
+                medicationNight: this.state.medicationNight
 
             })
             .then(() => {
@@ -41,7 +45,7 @@ export default class MedicationDailyView extends Component {
             });
     }
 
-    getMedicationSchedule() {
+    async getMedicationSchedule() {
         let medication;
         let medicationMorning = [];
         let medicationAfternoon = [];
@@ -100,6 +104,7 @@ export default class MedicationDailyView extends Component {
     }
 
     getMedicationDetails(date) {
+        let medication = this.state.medication
         let user = firebase.auth().currentUser
         db
             .collection("users")
@@ -109,16 +114,50 @@ export default class MedicationDailyView extends Component {
             .get()
             .then(doc => {
                 if (doc.exists) {
+                    let NEWmedication = this.state.medication
+
                     this.setState({
-                        // sleepDuration: doc.data().sleepDuration,
-                        // sleepQuality: doc.data().sleepQuality,
-                        // sleepDetails: doc.data().sleepDetails
+                        isLoading: false,
+                        medication: NEWmedication,
+                        medicationMorning: doc.data().medicationMorning,
+                        medicationAfternoon: doc.data().medicationAfternoon,
+                        medicationEvening: doc.data().medicationEvening,
+                        medicationNight: doc.data().medicationNight,
                     })
                 } else {
+                    let medicationMorning = []; 
+                    let medicationAfternoon = []; 
+                    let medicationEvening = []; 
+                    let medicationNight = [];
+                    let NEWmedication = this.state.medication
+                    NEWmedication.map((item) => {
+                        object = {
+                            name: item.name,
+                            checkbox: false
+                        }
+                        switch (item.time) {
+                            case 'sunrise':
+                                medicationMorning.push(object);
+                                break;
+                            case 'sun':
+                                medicationAfternoon.push(object);
+                                break;
+                            case 'sunset':
+                                medicationEvening.push(object);
+                                break;
+                            case 'moon':
+                                medicationNight.push(object);
+                                break;
+                            default: { }
+                        }
+                    })
                     this.setState({
-                        // sleepDuration: 0,
-                        // sleepQuality: 0,
-                        // sleepDetails: ""
+                        isLoading: false,
+                        medication: NEWmedication,
+                        medicationMorning: medicationMorning,
+                        medicationAfternoon: medicationAfternoon,
+                        medicationEvening: medicationEvening,
+                        medicationNight: medicationNight
                     })
                     console.log("No such document!");
                 }
@@ -133,6 +172,7 @@ export default class MedicationDailyView extends Component {
         this.setState({ selectedDate: prevDay })
         var prevDayString = prevDay.toJSON().slice(0, 10);
         this.setState({ selectedDateString: prevDayString });
+        this.getMedicationDetails(prevDayString);
     }
 
     setNextDay() {
@@ -140,6 +180,7 @@ export default class MedicationDailyView extends Component {
         this.setState({ selectedDate: nextDay })
         var nextDayString = nextDay.toJSON().slice(0, 10);
         this.setState({ selectedDateString: nextDayString });
+        this.getMedicationDetails(nextDayString);
     }
 
     toggleCheckBoxValue(item, index, array) {
@@ -148,12 +189,12 @@ export default class MedicationDailyView extends Component {
             name: item.name,
             checkbox: !item.checkbox
         }
-        array[index] = object;
-        this.setState({ $array: array })
+        newArray[index] = object;
+        this.setState({ $array: newArray })
     }
 
     componentWillMount() {
-        this.getMedicationSchedule();
+        this.getMedicationDetails(this.state.selectedDateString)
     }
 
     render() {
@@ -162,7 +203,7 @@ export default class MedicationDailyView extends Component {
                 <View style={styles.row} key={item.name}>
                     <Text> {item.name} </Text>
                     <CheckBox value={item.checkbox}
-                        size={15}
+                        size={10}
                         onValueChange={() => this.toggleCheckBoxValue(item, index, this.state.medicationMorning)}
                     />
                 </View>
@@ -171,7 +212,7 @@ export default class MedicationDailyView extends Component {
         const medicationAfternoon = this.state.medicationAfternoon.map((item, index) => {
             return (
                 <View style={styles.row} key={item.name}>
-                    <Text> {item.name} </Text>
+                    <Text style={{ fontSize: 10 }}> {item.name} </Text>
                     <CheckBox value={item.checkbox}
                         onValueChange={() => this.toggleCheckBoxValue(item, index, this.state.medicationAfternoon)}
                     />
@@ -206,73 +247,73 @@ export default class MedicationDailyView extends Component {
                 </View>
             )
         }
-        else {   
-        { console.log(this.state) }
-        today = new Date().toJSON().slice(0, 10);
-        return (
-            <View style={styles.container} >
-                {(this.state.selectedDateString == today) ?
-                    (
-                        <View style={styles.dateNavigatorShort}>
-                            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-                            <Text style={styles.dateText}> Today </Text>
-                        </View>
-                    ) : (
-                        <View style={styles.dateNavigatorLong}>
-                            <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
-                            <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
-                            <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
-                        </View>
-                    )
-                }
+        else {
+            { console.log(this.state) }
+            today = new Date().toJSON().slice(0, 10);
+            return (
+                <View style={styles.container} >
+                    {(this.state.selectedDateString == today) ?
+                        (
+                            <View style={styles.dateNavigatorShort}>
+                                <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+                                <Text style={styles.dateText}> Today </Text>
+                            </View>
+                        ) : (
+                            <View style={styles.dateNavigatorLong}>
+                                <Icon name="caretleft" size={25} color={'steelblue'} onPress={() => this.setPreviousDay()} />
+                                <Text style={styles.dateText}> {this.state.selectedDateString} </Text>
+                                <Icon name="caretright" size={25} color={'steelblue'} onPress={() => this.setNextDay()} />
+                            </View>
+                        )
+                    }
 
-                <View style={styles.medicationContainer}>
-                    <View>
-                        <View style={styles.dayTile}>
-                            <Text style={styles.dayTime}>
-                                Morning
+                    <View style={styles.medicationContainer}>
+                        <View>
+                            <View style={styles.dayTile}>
+                                <Text style={styles.dayTime}>
+                                    Morning
                             </Text>
-                            {medicationMorning}
+                                {medicationMorning}
+                            </View>
+                            <View style={styles.dayTile}>
+                                <Text style={styles.dayTime}>
+                                    Evening
+                            </Text>
+                                {medicationEvening}
+                            </View>
                         </View>
-                        <View style={styles.dayTile}>
-                            <Text style={styles.dayTime}>
-                                Afternoon
+                        <View>
+                            <View style={styles.dayTile}>
+                                <Text style={styles.dayTime}>
+                                    Afternoon
                             </Text>
-                            {medicationAfternoon}
+                                {medicationAfternoon}
+                            </View>
+                            <View style={styles.dayTile}>
+                                <Text style={styles.dayTime}>
+                                    Night
+                            </Text>
+                                {medicationNight}
+                            </View>
                         </View>
                     </View>
-                    <View>
-                        <View style={styles.dayTile}>
-                            <Text style={styles.dayTime}>
-                                Evening
-                            </Text>
-                            {medicationEvening}
-                        </View>
-                        <View style={styles.dayTile}>
-                            <Text style={styles.dayTime}>
-                                Night
-                            </Text>
-                            {medicationNight}
-                        </View>
-                    </View>
-                </View>
 
-                <TouchableOpacity style={styles.button}
-                    onPress={() => {
-                        this.updateMedicationDetails()
-                        ToastAndroid.showWithGravityAndOffset(
-                            'Medication details updated!',
-                            ToastAndroid.SHORT,
-                            ToastAndroid.BOTTOM,
-                            0, 280)
+                    <TouchableOpacity style={styles.button}
+                        onPress={() => {
+                            this.updateMedicationDetails()
+                            ToastAndroid.showWithGravityAndOffset(
+                                'Medication details updated!',
+                                ToastAndroid.SHORT,
+                                ToastAndroid.BOTTOM,
+                                0, 280)
                         }}>
-                    <Text style={styles.buttonText}>
-                        Update
+                        <Text style={styles.buttonText}>
+                            Update
             </Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
+                    </TouchableOpacity>
+                </View>
+            );
+        }
     };
 }
 
@@ -321,14 +362,15 @@ const styles = StyleSheet.create({
     row: {
         flex: 1,
         flexDirection: 'row',
+        alignItems: 'flex-start',
         justifyContent: 'space-between',
-        width: Dimensions.get('window').width/3,
-        height: Dimensions.get('window').width/3,
-        margin: 5,
-        height: 15,
+        width: Dimensions.get('window').width / 3,
+        height: Dimensions.get('window').width / 3,
+        margin: 0,
+        height: 10,
     },
     dayTile: {
-        justifyContent: 'center', 
+        justifyContent: 'center',
         alignItems: 'center',
         width: Dimensions.get('window').width / 2 - 10,
         height: Dimensions.get('window').width / 2 - 10,

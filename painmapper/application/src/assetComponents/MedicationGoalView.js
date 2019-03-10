@@ -95,8 +95,6 @@ export default class MedicationGoalView extends Component {
     }
 
     render() {
-        console.log(this.state)
-
         const repeatedMeds = this.state.medication.map( (item, index) => {
             return (
                 <View style={styles.row} key={item.name}>
@@ -118,6 +116,9 @@ export default class MedicationGoalView extends Component {
                 {repeatedMeds}
 
                 </View>
+                <Text style={styles.addMedicationText}>
+                    Add new medication: 
+                </Text>
                 <View style={styles.addMedication}>
                     <Picker
                         selectedValue={this.state.newMedTime}
@@ -196,6 +197,16 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         marginTop: 20
     },
+    addMedicationText: {
+        position: 'absolute', 
+        bottom: 80,
+        alignSelf: 'flex-start',
+        color: '#CCCCCC',
+        fontSize: 16,
+        fontStyle: 'italic',
+        marginLeft: 10,
+
+    },
     repeatedMeds: {
         position: 'absolute', 
         top: 110, 
@@ -204,6 +215,7 @@ const styles = StyleSheet.create({
     row: {
         flex: 1, 
         flexDirection: 'row', 
+        alignItems: 'flex-start',
         justifyContent: 'space-between',
         marginVertical: 2, 
         marginHorizontal: 10,
@@ -215,7 +227,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'absolute',
-        bottom: 50,
+        bottom: 10,
         width: '100%',
         height: 40,
         margin: 20, 
