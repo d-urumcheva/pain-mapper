@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import {format} from 'date-fns';
 import { Rating } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
 import firebase from 'react-native-firebase'
@@ -98,8 +99,7 @@ export default class SleepMonthlyView extends Component {
         monthlyStats = await Promise.all(promises);
 
         for (let i = 0; i < monthlyStats.length; i++) {
-            var options = { weekday: 'long' };
-            daysOfMonth.push(new Intl.DateTimeFormat('en-US', options).format(monthlyStats[i].date).slice(0, 1));
+            daysOfMonth.push(format(monthlyStats[i].date, 'dd'))
             sleepByDays.push(monthlyStats[i].sleepDuration);
         }
 

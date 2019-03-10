@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import {format} from 'date-fns';
 import { Rating } from 'react-native-elements';
 import { LineChart } from 'react-native-chart-kit';
 import firebase from 'react-native-firebase'
@@ -97,8 +98,7 @@ export default class SleepWeeklyView extends Component {
         weeklyStats = await Promise.all(promises);
 
         for (let i = 0; i < weeklyStats.length; i++) {
-            var options = { weekday: 'long' };
-            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(weeklyStats[i].date).slice(0, 3));
+            daysOfWeek.push(format(weeklyStats[i].date, 'ddd'))
             sleepByDays.push(weeklyStats[i].sleepDuration);
         }
 

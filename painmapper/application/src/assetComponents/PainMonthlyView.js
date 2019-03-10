@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView, Text, Dimensions, ActivityIndicator } from 'react-native';
+import {format} from 'date-fns';
 import { LineChart } from 'react-native-chart-kit';
 import firebase from 'react-native-firebase';
 
@@ -125,8 +126,7 @@ export default class PainMonthlyView extends Component {
         painDays = await Promise.all(promises);
 
         for (let i = 0; i < painDays.length; i++) {
-            var options = { weekday: 'long' };
-            daysOfWeek.push(new Intl.DateTimeFormat('en-US', options).format(painDays[i].date).slice(0, 1));
+            daysOfWeek.push(format(painDays[i].date, 'dd'))
             painByDays.push(painDays[i].overallPain);
             arthritisByDay.push(painDays[i].arthritisIntensity);
             backPainByDay.push(painDays[i].backPainIntensity);
