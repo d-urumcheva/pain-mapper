@@ -15,6 +15,7 @@ export default class SleepGoalView extends Component {
             goalWakeTime: new Date(),
             goalSleepDuration: 8
         }
+        // this.getSleepGoals()
     }
 
     updateSleepGoals() {
@@ -36,7 +37,7 @@ export default class SleepGoalView extends Component {
             });
     }
 
-    getSleepGoals() {
+    async getSleepGoals() {
         let user = firebase.auth().currentUser
         db
             .collection("users")
@@ -51,6 +52,12 @@ export default class SleepGoalView extends Component {
                         goalWakeTime: doc.data().goalWakeTime,
                     })
                 } else {
+                    let time = new Date();
+                    time.setHours(8).setMinutes(30)
+                    this.setState({
+                        goalWakeTime: time,
+                        goalSleepDuration: 8
+                    })
                     console.log("No such document!");
                 }
             })

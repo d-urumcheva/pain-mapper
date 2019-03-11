@@ -248,7 +248,6 @@ export default class MedicationDailyView extends Component {
             )
         }
         else {
-            { console.log(this.state) }
             today = new Date().toJSON().slice(0, 10);
             return (
                 <View style={styles.container} >
